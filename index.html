@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steve &amp; Pamela — Nuestra Boda</title>
+
+<!-- ============================================================
+     INVITACIÓN DIGITAL DE BODA · Steve & Pamela
+     Sábado 12 de diciembre de 2026 · 16:30
+     San José el Viejo · La Antigua Guatemala
+     ------------------------------------------------------------
+     Para ajustar datos: edita el bloque CONFIG al final.
+     Para las fotos de la galería: reemplaza los placeholders
+     por <img src="fotos/tu-foto.jpg" alt="...">
+     ============================================================ -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Karla:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  /* Paleta basada en: Sage #95A58D · Light Sage #C0CFB2 · Sea Glass #AEBDCF
+     Dusty Blue #5D7B9F · Periwinkle #9BAED4 · Navy · Moss · Eucalyptus · Teal */
+  --paper:    #F8F9F6;
+  --ink:      #2F4156;   /* navy */
+  --stone:    #8C94A0;   /* gris azulado */
+  --sage:     #95A58D;
+  --sage-lt:  #C0CFB2;
+  --sage-dk:  #74836C;
+  --dusty:    #5D7B9F;
+  --seaglass: #AEBDCF;
+  --hairline: #DDE3DA;
+  --display: 'Marcellus', serif;
+  --body:    'Karla', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--body);
+  font-weight:300;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- utilidades tipográficas ---------- */
+.eyebrow{
+  font-size:.72rem;
+  letter-spacing:.42em;
+  text-transform:uppercase;
+  color:var(--sage-dk);
+  margin-bottom:1.4rem;
+}
+h1,h2,h3{font-family:var(--display);font-weight:400}
+h2{font-size:clamp(1.9rem,4vw,2.7rem);letter-spacing:.04em;margin-bottom:1.2rem}
+
+/* ---------- línea vertical continua (elemento firma) ---------- */
+.thread{
+  width:1px;height:90px;margin:0 auto;
+  background:linear-gradient(var(--sage) 0%,var(--hairline) 100%);
+}
+
+/* ---------- secciones ---------- */
+section{
+  max-width:680px;
+  margin:0 auto;
+  padding:5.5rem 1.6rem;
+  text-align:center;
+}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ---------- HERO ---------- */
+.hero{
+  min-height:100svh;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  position:relative;overflow:hidden;
+  padding:2rem 1.6rem;
+  background:linear-gradient(180deg,#F4F6F1 0%,var(--paper) 60%);
+}
+.hero .monogram{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);
+  font-size:clamp(16rem,55vw,34rem);
+  color:var(--dusty);opacity:.05;
+  user-select:none;pointer-events:none;
+  line-height:1;
+}
+.hero .eyebrow{margin-bottom:2.2rem}
+.hero h1{
+  font-size:clamp(2.6rem,8vw,4.6rem);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  line-height:1.15;
+}
+.hero .amp{
+  display:block;
+  font-size:clamp(1.6rem,4vw,2.4rem);
+  color:var(--sage);
+  font-style:italic;
+  font-family:var(--display);
+  margin:.4rem 0;
+  text-transform:none;letter-spacing:0;
+}
+.hero .fecha{
+  margin-top:2.4rem;
+  font-size:.86rem;letter-spacing:.34em;text-transform:uppercase;color:var(--stone);
+}
+.hero .lugar{font-size:.8rem;letter-spacing:.24em;text-transform:uppercase;color:var(--stone);margin-top:.5rem}
+.scroll-hint{
+  position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);
+  font-size:.66rem;letter-spacing:.36em;text-transform:uppercase;color:var(--stone);
+}
+.scroll-hint::after{
+  content:"";display:block;width:1px;height:34px;background:var(--stone);
+  margin:.7rem auto 0;animation:drop 2.4s ease-in-out infinite;
+}
+@keyframes drop{0%,100%{transform:scaleY(.4);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}}
+@media (prefers-reduced-motion: reduce){.scroll-hint::after{animation:none}}
+
+/* ---------- COUNTDOWN ---------- */
+.countdown{
+  display:flex;justify-content:center;gap:0;
+  border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);
+}
+.countdown div{
+  flex:1;padding:1.8rem .4rem;
+  border-right:1px solid var(--hairline);
+}
+.countdown div:last-child{border-right:none}
+.countdown b{
+  display:block;font-family:var(--display);font-weight:400;
+  font-size:clamp(2.2rem,7vw,3.4rem);line-height:1;color:var(--ink);
+}
+.countdown span{
+  display:block;margin-top:.6rem;
+  font-size:.62rem;letter-spacing:.32em;text-transform:uppercase;color:var(--stone);
+}
+
+/* ---------- ITINERARIO ---------- */
+.evento{
+  border:1px solid var(--hairline);
+  padding:2.4rem 1.8rem;margin-bottom:1.4rem;
+  text-align:center;background:#fff;
+}
+.evento h3{font-size:1.3rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.6rem}
+.evento .hora{font-family:var(--display);font-size:2rem;color:var(--dusty);margin:.4rem 0}
+.evento p{font-size:.92rem;color:var(--stone)}
+.btn{
+  display:inline-block;margin-top:1.4rem;
+  padding:.85rem 2.2rem;
+  border:1px solid var(--ink);
+  color:var(--ink);text-decoration:none;
+  font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;
+  transition:background .3s,color .3s;
+}
+.btn:hover,.btn:focus-visible{background:var(--ink);color:var(--paper)}
+.btn:focus-visible{outline:2px solid var(--sage);outline-offset:3px}
+
+/* ---------- MAPA ---------- */
+.mapa iframe{
+  width:100%;height:320px;border:1px solid var(--hairline);
+  filter:grayscale(.85) contrast(.95);display:block;margin-top:1.6rem;
+}
+
+/* ---------- DRESS CODE ---------- */
+.siluetas{
+  display:flex;justify-content:center;gap:3.5rem;
+  margin:2.4rem 0 1.8rem;flex-wrap:wrap;
+}
+.silueta{display:flex;flex-direction:column;align-items:center;gap:1rem}
+.silueta .marco{
+  width:150px;height:190px;
+  background:#fff;border:1px solid var(--hairline);
+  display:flex;align-items:center;justify-content:center;
+}
+.silueta figcaption{
+  font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;color:var(--stone);
+}
+.silueta figcaption b{display:block;font-weight:500;color:var(--ink);letter-spacing:.24em}
+.paleta{display:flex;justify-content:center;gap:.8rem;margin:2rem 0 .6rem;flex-wrap:wrap}
+.paleta i{width:32px;height:32px;border-radius:50%;border:1px solid rgba(0,0,0,.06)}
+.paleta-nota{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--stone)}
+
+/* ---------- GALERÍA ---------- */
+.galeria{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin-top:1.8rem;
+}
+.galeria .foto{
+  aspect-ratio:3/4;overflow:hidden;background:#E9EDE5;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--stone);font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;
+}
+.galeria .foto:nth-child(1){grid-column:span 2;aspect-ratio:16/9}
+.galeria img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* ---------- HOTELES ---------- */
+.hoteles-intro{font-size:.92rem;color:var(--stone);max-width:460px;margin:0 auto 2rem}
+.hotel{
+  padding:1.5rem 0;border-bottom:1px solid var(--hairline);text-align:left;
+  display:flex;justify-content:space-between;gap:1.2rem;align-items:center;flex-wrap:wrap;
+}
+.hotel:first-of-type{border-top:1px solid var(--hairline)}
+.hotel .nombre{font-family:var(--display);font-size:1.12rem}
+.hotel .dist{font-size:.78rem;color:var(--stone);letter-spacing:.05em;margin-top:.15rem}
+.hotel .acciones{display:flex;gap:1.4rem;align-items:center}
+.hotel a{
+  font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--dusty);text-decoration:none;white-space:nowrap;
+}
+.hotel a:hover{text-decoration:underline}
+.hotel a.tel{color:var(--sage-dk)}
+
+/* ---------- RSVP ---------- */
+.rsvp{background:var(--ink);color:var(--paper);max-width:none}
+.rsvp .inner{max-width:680px;margin:0 auto}
+.rsvp .eyebrow{color:var(--sage-lt)}
+.rsvp h2{color:var(--paper)}
+.rsvp p{color:#AEB8C4;font-size:.95rem;max-width:460px;margin:0 auto}
+.rsvp .btn{border-color:var(--paper);color:var(--paper);margin-top:2.2rem}
+.rsvp .btn:hover,.rsvp .btn:focus-visible{background:var(--paper);color:var(--ink)}
+
+/* ---------- FOOTER ---------- */
+footer{
+  text-align:center;padding:3.5rem 1.6rem;
+  font-size:.68rem;letter-spacing:.34em;text-transform:uppercase;color:var(--stone);
+}
+footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;color:var(--ink);margin-bottom:.8rem}
+
+@media (max-width:560px){
+  .hotel{flex-direction:column;align-items:flex-start;gap:.6rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== HERO ==================== -->
+<header class="hero">
+  <div class="monogram" aria-hidden="true">S&amp;P</div>
+  <p class="eyebrow reveal">Nos casamos</p>
+  <h1 class="reveal">
+    Steve
+    <span class="amp">&amp;</span>
+    Pamela
+  </h1>
+  <p class="fecha reveal">Sábado · 12 · Diciembre · 2026</p>
+  <p class="lugar reveal">San José el Viejo · La Antigua Guatemala</p>
+  <div class="scroll-hint">Desliza</div>
+</header>
+
+<!-- ==================== COUNTDOWN ==================== -->
+<section>
+  <p class="eyebrow reveal">Faltan</p>
+  <div class="countdown reveal" id="countdown" aria-live="polite">
+    <div><b id="cd-d">–</b><span>Días</span></div>
+    <div><b id="cd-h">–</b><span>Horas</span></div>
+    <div><b id="cd-m">–</b><span>Min</span></div>
+    <div><b id="cd-s">–</b><span>Seg</span></div>
+  </div>
+  <div class="thread" style="margin-top:4rem"></div>
+</section>
+
+<!-- ==================== MENSAJE ==================== -->
+<section class="reveal">
+  <p class="eyebrow">Con la bendición de Dios y nuestras familias</p>
+  <h2>Queremos compartir contigo el inicio de nuestra historia</h2>
+  <p style="max-width:460px;margin:0 auto;color:var(--stone)">
+    <!-- EDITAR: mensaje personal de Steve y Pamela -->
+    Después de tantos momentos juntos, llegó el día de dar el paso más
+    importante. Nada nos haría más felices que celebrarlo contigo entre
+    las calles y ruinas de La Antigua.
+  </p>
+  <div class="thread" style="margin-top:4rem"></div>
+</section>
+
+<!-- ==================== ITINERARIO + MAPA ==================== -->
+<section>
+  <p class="eyebrow reveal">Itinerario</p>
+  <h2 class="reveal">El gran día</h2>
+
+  <div class="evento reveal">
+    <h3>Ceremonia</h3>
+    <div class="hora">4:30 PM</div>
+    <p>San José el Viejo<br>5a Avenida Sur, La Antigua Guatemala</p>
+    <a class="btn" id="mapaCeremonia" href="#" target="_blank" rel="noopener">Ver ubicación</a>
+  </div>
+
+  <div class="evento reveal">
+    <h3>Recepción</h3>
+    <div class="hora">Al finalizar</div>
+    <p>En el mismo lugar<br>San José el Viejo</p>
+  </div>
+
+  <div class="mapa reveal">
+    <iframe
+      src="https://www.google.com/maps?q=Iglesia+San+Jose+El+Viejo+Antigua+Guatemala&output=embed"
+      loading="lazy" title="Mapa de San José el Viejo" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+  <div class="thread" style="margin-top:4rem"></div>
+</section>
+
+<!-- ==================== DRESS CODE ==================== -->
+<section>
+  <p class="eyebrow reveal">Código de vestimenta</p>
+  <h2 class="reveal">Formal · Etiqueta</h2>
+
+  <div class="siluetas reveal">
+    <!-- Silueta minimalista: traje de caballero -->
+    <figure class="silueta">
+      <div class="marco">
+        <svg viewBox="0 0 120 200" width="110" height="176" fill="none"
+             stroke="#2F4156" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+             role="img" aria-label="Silueta de traje formal de caballero">
+          <!-- hombros -->
+          <path d="M30 32 Q60 24 90 32"/>
+          <!-- laterales del saco -->
+          <path d="M30 32 L34 112"/>
+          <path d="M90 32 L86 112"/>
+          <!-- solapas en V -->
+          <path d="M50 30 L60 62 L70 30"/>
+          <path d="M50 30 L44 50"/>
+          <path d="M70 30 L76 50"/>
+          <!-- corbata -->
+          <path d="M60 62 L57 84 L60 94 L63 84 Z" stroke-width="1.8"/>
+          <!-- ruedo del saco -->
+          <path d="M34 112 L52 112"/>
+          <path d="M86 112 L68 112"/>
+          <path d="M52 112 L60 100 L68 112"/>
+          <!-- pantalón -->
+          <path d="M44 112 L41 184"/>
+          <path d="M58 118 L56 184"/>
+          <path d="M62 118 L64 184"/>
+          <path d="M76 112 L79 184"/>
+          <path d="M41 184 L56 184"/>
+          <path d="M64 184 L79 184"/>
+        </svg>
+      </div>
+      <figcaption><b>Ellos</b>Traje oscuro</figcaption>
+    </figure>
+
+    <!-- Silueta minimalista: vestido largo de dama -->
+    <figure class="silueta">
+      <div class="marco">
+        <svg viewBox="0 0 120 200" width="110" height="176" fill="none"
+             stroke="#2F4156" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+             role="img" aria-label="Silueta de vestido largo de dama">
+          <!-- tirantes -->
+          <path d="M46 14 L44 34"/>
+          <path d="M74 14 L76 34"/>
+          <!-- escote en V -->
+          <path d="M44 34 L60 50 L76 34"/>
+          <!-- torso entallado -->
+          <path d="M44 34 C42 52 44 64 47 74"/>
+          <path d="M76 34 C78 52 76 64 73 74"/>
+          <!-- cintura -->
+          <path d="M47 74 L73 74" stroke-width="1.6"/>
+          <!-- falda larga en A -->
+          <path d="M47 74 C32 118 25 160 23 186"/>
+          <path d="M73 74 C88 118 95 160 97 186"/>
+          <!-- ruedo -->
+          <path d="M23 186 Q60 195 97 186"/>
+        </svg>
+      </div>
+      <figcaption><b>Ellas</b>Vestido largo</figcaption>
+    </figure>
+  </div>
+
+  <p style="color:var(--stone);max-width:440px;margin:0 auto;font-size:.92rem">
+    Te pedimos reservar el color blanco para la novia.
+    Estos son los tonos de nuestra boda, por si deseas inspirarte:
+  </p>
+  <div class="paleta" aria-hidden="true">
+    <i style="background:#2F4156" title="Navy"></i>
+    <i style="background:#4E7378" title="Teal"></i>
+    <i style="background:#5D7B9F" title="Dusty Blue"></i>
+    <i style="background:#9BAED4" title="Periwinkle"></i>
+    <i style="background:#AEBDCF" title="Sea Glass"></i>
+    <i style="background:#5C6E54" title="Moss"></i>
+    <i style="background:#7E8D77" title="Eucalyptus"></i>
+    <i style="background:#95A58D" title="Sage"></i>
+    <i style="background:#C0CFB2" title="Light Sage"></i>
+  </div>
+  <p class="paleta-nota">Navy · Teal · Azul polvoso · Sea glass · Moss · Eucalipto · Salvia</p>
+  <div class="thread" style="margin-top:3rem"></div>
+</section>
+
+<!-- ==================== GALERÍA ==================== -->
+<section>
+  <p class="eyebrow reveal">Nuestra historia</p>
+  <h2 class="reveal">Momentos</h2>
+  <div class="galeria reveal">
+    <!-- EDITAR: reemplaza cada placeholder por <img src="fotos/1.jpg" alt="Steve y Pamela"> -->
+    <div class="foto">Foto principal</div>
+    <div class="foto">Foto 2</div>
+    <div class="foto">Foto 3</div>
+    <div class="foto">Foto 4</div>
+    <div class="foto">Foto 5</div>
+  </div>
+  <div class="thread" style="margin-top:4rem"></div>
+</section>
+
+<!-- ==================== HOTELES ==================== -->
+<section>
+  <p class="eyebrow reveal">Para nuestros invitados de fuera</p>
+  <h2 class="reveal">Hoteles sugeridos</h2>
+  <p class="hoteles-intro reveal">
+    Todos se encuentran a pocos pasos de San José el Viejo.
+    Puedes llamar directamente para consultar disponibilidad.
+  </p>
+  <div id="hoteles" class="reveal"><!-- se llena desde CONFIG --></div>
+  <div class="thread" style="margin-top:4rem"></div>
+</section>
+
+<!-- ==================== MESA DE REGALOS ==================== -->
+<section class="reveal">
+  <p class="eyebrow">Mesa de regalos</p>
+  <h2>Tu presencia es nuestro mejor regalo</h2>
+  <p style="color:var(--stone);max-width:440px;margin:0 auto">
+    <!-- EDITAR: agrega links de mesa de regalos o datos de cuenta si lo desean -->
+    Si deseas hacernos un obsequio, agradeceremos tu aporte en sobre
+    el día del evento.
+  </p>
+</section>
+
+<!-- ==================== RSVP ==================== -->
+<section class="rsvp">
+  <div class="inner reveal">
+    <p class="eyebrow">Confirmación</p>
+    <h2>¿Contamos contigo?</h2>
+    <p>Por favor confirma tu asistencia antes del <b>12 de noviembre</b>.  <!-- EDITAR: fecha límite -->
+       Al presionar el botón se abrirá WhatsApp con un mensaje listo para enviar a Steve.</p>
+    <a class="btn" id="btnWhatsApp" href="#" target="_blank" rel="noopener">Confirmar por WhatsApp</a>
+  </div>
+</section>
+
+<footer>
+  <div class="mono">S &amp; P</div>
+  12 · 12 · 2026 · La Antigua Guatemala
+</footer>
+
+<script>
+/* ============================================================
+   CONFIG — edita solo este bloque
+   ============================================================ */
+const CONFIG = {
+  // 12 de diciembre de 2026, 4:30 PM  (mes 11 = diciembre)
+  fechaEvento: new Date(2026, 11, 12, 16, 30, 0),
+
+  // WhatsApp de Steve (código de país + número, sin "+" ni espacios)
+  whatsapp: "50241024231",
+  mensajeWhatsApp: "¡Hola Steve! Confirmo mi asistencia a su boda el 12 de diciembre. Asistiremos ___ personas. 🤍",
+
+  // Link de Google Maps del lugar
+  mapaCeremonia: "https://maps.google.com/?q=Iglesia+San+Jose+El+Viejo+Antigua+Guatemala",
+
+  // Hoteles cercanos (verificados, con teléfono para consultar disponibilidad)
+  hoteles: [
+    { nombre: "Porta Hotel Antigua",      distancia: "Frente al lugar · 1 min a pie",  tel: "+502 7931 0600", link: "https://maps.google.com/?q=Porta+Hotel+Antigua" },
+    { nombre: "Camino Real Antigua",      distancia: "7a Calle Poniente · 4 min a pie", tel: "+502 7873 7000", link: "https://maps.google.com/?q=Camino+Real+Antigua+Guatemala" },
+    { nombre: "Casa Encantada (boutique)",distancia: "9a Calle Poniente · 3 min a pie", tel: "+502 7832 7903", link: "https://maps.google.com/?q=Casa+Encantada+Antigua+Guatemala" },
+    { nombre: "Hotel Las Farolas",        distancia: "5a Av. Sur · 2 min a pie",        tel: "+502 7795 6000", link: "https://maps.google.com/?q=Hotel+Las+Farolas+Antigua" },
+    { nombre: "Casa Santo Domingo",       distancia: "3a Calle Oriente · 12 min a pie", tel: "+502 7820 1220", link: "https://maps.google.com/?q=Casa+Santo+Domingo+Antigua" }
+  ]
+};
+/* ============================================================ */
+
+// --- Countdown ---
+function tick(){
+  const diff = CONFIG.fechaEvento - new Date();
+  const set = (id,v)=>document.getElementById(id).textContent = String(Math.max(0,v)).padStart(2,"0");
+  set("cd-d", Math.floor(diff/86400000));
+  set("cd-h", Math.floor(diff/3600000)%24);
+  set("cd-m", Math.floor(diff/60000)%60);
+  set("cd-s", Math.floor(diff/1000)%60);
+}
+tick(); setInterval(tick,1000);
+
+// --- WhatsApp ---
+document.getElementById("btnWhatsApp").href =
+  `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(CONFIG.mensajeWhatsApp)}`;
+
+// --- Mapa ---
+document.getElementById("mapaCeremonia").href = CONFIG.mapaCeremonia;
+
+// --- Hoteles ---
+document.getElementById("hoteles").innerHTML = CONFIG.hoteles.map(h => `
+  <div class="hotel">
+    <div>
+      <div class="nombre">${h.nombre}</div>
+      <div class="dist">${h.distancia}</div>
+    </div>
+    <div class="acciones">
+      <a class="tel" href="tel:${h.tel.replace(/\s/g,"")}">${h.tel}</a>
+      <a href="${h.link}" target="_blank" rel="noopener">Cómo llegar</a>
+    </div>
+  </div>`).join("");
+
+// --- Animaciones al hacer scroll ---
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+}), { threshold:.15 });
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+</script>
+</body>
+</html>
