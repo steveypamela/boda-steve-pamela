@@ -103,43 +103,66 @@ body.locked{overflow:hidden}
 }
 .env-back,.env-pocket,.env-flap{position:absolute;inset:0}
 .env-back{
-  background:#F4F6F0;
-  border:1px solid var(--hairline);
-  box-shadow:0 24px 60px rgba(47,65,86,.16);
+  background:linear-gradient(160deg,#5F7DA0,#47617E);
+  box-shadow:0 28px 64px rgba(31,45,62,.38);
   z-index:1;
 }
 .env-card{
   position:absolute;left:5%;right:5%;top:4%;bottom:8%;
-  background:#fff;border:1px solid var(--hairline);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;
+  background:#FDFCF8;
+  border:1px solid #D9D5C9;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.55rem;
   transition:transform 1s cubic-bezier(.22,.8,.3,1) .55s;
   z-index:2;
 }
-.env-card img{width:64px;opacity:.92}
+.env-card::before{
+  content:"";position:absolute;inset:7px;
+  border:1px solid var(--seaglass);
+  pointer-events:none;
+}
+.env-card img{width:60px;opacity:.92}
 .env-card .n{font-family:var(--display);font-size:1.2rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
+.env-div{width:44px;height:1px;background:var(--seaglass)}
 .env-card .f{font-size:.6rem;letter-spacing:.34em;color:var(--stone);text-transform:uppercase}
 .env-pocket{
-  background:linear-gradient(180deg,#EDF0E8,#E3E8DC);
+  background:linear-gradient(180deg,#5D7B9F,#496285);
+  box-shadow:inset 0 16px 28px rgba(15,26,40,.18), inset 0 -2px 10px rgba(255,255,255,.08);
   clip-path:polygon(0 0,50% 46%,100% 0,100% 100%,0 100%);
   z-index:3;
 }
 .env-flap{
-  background:linear-gradient(180deg,#E9EDE2,#DDE3D4);
+  background:linear-gradient(180deg,#3E5678,#31455F);
   clip-path:polygon(0 0,100% 0,50% 62%);
   transform-origin:top;
   transition:transform .8s cubic-bezier(.6,.05,.3,1);
+  box-shadow:inset 0 -10px 18px rgba(0,0,0,.18);
   z-index:4;
+}
+.env-remitente{
+  position:absolute;left:0;right:0;bottom:8%;
+  text-align:center;pointer-events:none;z-index:4;
+  font-family:var(--display);font-style:italic;
+  font-size:.8rem;letter-spacing:.24em;color:#D7E0E9;
 }
 .env-seal{
   position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
-  width:76px;height:76px;border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#83937B,var(--sage-dk) 72%);
-  box-shadow:0 4px 14px rgba(47,65,86,.3), inset 0 0 0 3px rgba(255,255,255,.18);
+  width:86px;height:86px;
+  border-radius:46% 54% 52% 48% / 55% 47% 53% 45%;
+  background:radial-gradient(circle at 34% 28%,#4D698D,#2A3C52 70%);
+  box-shadow:
+    0 6px 18px rgba(15,26,40,.5),
+    inset 0 2px 5px rgba(255,255,255,.28),
+    inset 0 -4px 8px rgba(0,0,0,.35);
   display:flex;align-items:center;justify-content:center;
   z-index:5;
   transition:opacity .4s ease,transform .4s ease;
 }
-.env-seal img{width:56%;filter:brightness(0) invert(1);opacity:.95}
+.env-seal::before{
+  content:"";position:absolute;inset:9px;
+  border-radius:inherit;
+  border:1px solid rgba(255,255,255,.32);
+}
+.env-seal img{width:52%;filter:brightness(0) invert(1);opacity:.95}
 #sobre.open .env-flap{transform:rotateX(180deg);z-index:1}
 #sobre.open .env-seal{opacity:0;transform:translate(-50%,-50%) scale(.6)}
 #sobre.open .env-card{transform:translateY(-62%)}
@@ -325,13 +348,15 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
     <div class="env">
       <div class="env-back"></div>
       <div class="env-card">
-        <img src="logo.png" alt="">
+        <img src="logo.png" alt="" onerror="this.remove()">
         <div class="n">Steve &amp; Pamela</div>
+        <div class="env-div"></div>
         <div class="f">12 · 12 · 2026</div>
       </div>
       <div class="env-pocket"></div>
+      <div class="env-remitente">La Antigua Guatemala</div>
       <div class="env-flap"></div>
-      <div class="env-seal"><img src="logo.png" alt=""></div>
+      <div class="env-seal"><img src="logo.png" alt="" onerror="this.parentElement.innerHTML='<span style=\'font-family:var(--display);color:#fff;font-size:1.5rem;letter-spacing:.05em\'>SP</span>'"></div>
     </div>
     <p class="sobre-hint">Toca el sobre para abrir</p>
   </div>
@@ -340,7 +365,7 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 <!-- ==================== HERO ==================== -->
 <header class="hero">
   <div class="monogram" aria-hidden="true"><img src="logo.png" alt=""></div>
-  <img class="hero-logo reveal" src="logo.png" alt="Monograma S y P">
+  <img class="hero-logo reveal" src="logo.png" alt="" onerror="this.remove()">
   <p class="eyebrow reveal">Nos casamos</p>
   <h1 class="reveal">
     Steve
@@ -539,7 +564,7 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 </section>
 
 <footer>
-  <img src="logo.png" alt="S y P" style="width:58px;display:block;margin:0 auto .9rem;opacity:.9">
+  <img src="logo.png" alt="" onerror="this.remove()" style="width:58px;display:block;margin:0 auto .9rem;opacity:.9">
   12 · 12 · 2026 · La Antigua Guatemala
 </footer>
 
