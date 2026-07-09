@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Steve &amp; Pamela — Nuestra Boda</title>
 
+<!-- Vista previa al compartir el link (WhatsApp, redes) -->
+<meta property="og:title" content="Steve & Pamela — Nuestra Boda">
+<meta property="og:description" content="Sábado 12 de diciembre de 2026 · 4:30 PM · San José el Viejo, La Antigua Guatemala. ¡Acompáñanos!">
+<meta property="og:image" content="https://steveypamela.github.io/boda-steve-pamela/logo.png">
+<meta property="og:url" content="https://steveypamela.github.io/boda-steve-pamela/">
+<meta property="og:type" content="website">
+
 <!-- ============================================================
      INVITACIÓN DIGITAL DE BODA · Steve & Pamela
      Sábado 12 de diciembre de 2026 · 16:30
@@ -77,6 +84,76 @@ section{
   html{scroll-behavior:auto}
 }
 
+/* ---------- SOBRE DE APERTURA ---------- */
+body.locked{overflow:hidden}
+#sobre{
+  position:fixed;inset:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,#EEF1EA 0%,var(--paper) 100%);
+  cursor:pointer;
+  transition:opacity .7s ease;
+}
+#sobre.fade{opacity:0;pointer-events:none}
+.sobre-wrap{text-align:center;padding:1rem}
+.env{
+  position:relative;
+  width:min(86vw,400px);aspect-ratio:10/7;
+  margin:0 auto;
+  perspective:900px;
+}
+.env-back,.env-pocket,.env-flap{position:absolute;inset:0}
+.env-back{
+  background:#F4F6F0;
+  border:1px solid var(--hairline);
+  box-shadow:0 24px 60px rgba(47,65,86,.16);
+  z-index:1;
+}
+.env-card{
+  position:absolute;left:5%;right:5%;top:4%;bottom:8%;
+  background:#fff;border:1px solid var(--hairline);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;
+  transition:transform 1s cubic-bezier(.22,.8,.3,1) .55s;
+  z-index:2;
+}
+.env-card img{width:64px;opacity:.92}
+.env-card .n{font-family:var(--display);font-size:1.2rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
+.env-card .f{font-size:.6rem;letter-spacing:.34em;color:var(--stone);text-transform:uppercase}
+.env-pocket{
+  background:linear-gradient(180deg,#EDF0E8,#E3E8DC);
+  clip-path:polygon(0 0,50% 46%,100% 0,100% 100%,0 100%);
+  z-index:3;
+}
+.env-flap{
+  background:linear-gradient(180deg,#E9EDE2,#DDE3D4);
+  clip-path:polygon(0 0,100% 0,50% 62%);
+  transform-origin:top;
+  transition:transform .8s cubic-bezier(.6,.05,.3,1);
+  z-index:4;
+}
+.env-seal{
+  position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
+  width:76px;height:76px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#83937B,var(--sage-dk) 72%);
+  box-shadow:0 4px 14px rgba(47,65,86,.3), inset 0 0 0 3px rgba(255,255,255,.18);
+  display:flex;align-items:center;justify-content:center;
+  z-index:5;
+  transition:opacity .4s ease,transform .4s ease;
+}
+.env-seal img{width:56%;filter:brightness(0) invert(1);opacity:.95}
+#sobre.open .env-flap{transform:rotateX(180deg);z-index:1}
+#sobre.open .env-seal{opacity:0;transform:translate(-50%,-50%) scale(.6)}
+#sobre.open .env-card{transform:translateY(-62%)}
+.sobre-hint{
+  margin-top:2.2rem;
+  font-size:.66rem;letter-spacing:.4em;text-transform:uppercase;color:var(--stone);
+  animation:pulse 2.6s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
+@media (prefers-reduced-motion: reduce){
+  .sobre-hint{animation:none}
+  .env-flap,.env-card,.env-seal,#sobre{transition:none}
+}
+
 /* ---------- HERO ---------- */
 .hero{
   min-height:100svh;
@@ -88,12 +165,10 @@ section{
 .hero .monogram{
   position:absolute;inset:0;
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--display);
-  font-size:clamp(16rem,55vw,34rem);
-  color:var(--dusty);opacity:.05;
   user-select:none;pointer-events:none;
-  line-height:1;
 }
+.hero .monogram img{width:min(78vmin,560px);opacity:.045}
+.hero-logo{width:92px;margin-bottom:1.8rem;opacity:.92}
 .hero .eyebrow{margin-bottom:2.2rem}
 .hero h1{
   font-size:clamp(2.6rem,8vw,4.6rem);
@@ -195,10 +270,12 @@ section{
   display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin-top:1.8rem;
 }
 .galeria .foto{
+  position:relative;
   aspect-ratio:3/4;overflow:hidden;background:#E9EDE5;
   display:flex;align-items:center;justify-content:center;
   color:var(--stone);font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;
 }
+.galeria .foto img{position:absolute;inset:0;z-index:1}
 .galeria .foto:nth-child(1){grid-column:span 2;aspect-ratio:16/9}
 .galeria img{width:100%;height:100%;object-fit:cover;display:block}
 
@@ -242,9 +319,28 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 </head>
 <body>
 
+<!-- ==================== SOBRE DE APERTURA ==================== -->
+<div id="sobre" role="button" tabindex="0" aria-label="Toca para abrir la invitación">
+  <div class="sobre-wrap">
+    <div class="env">
+      <div class="env-back"></div>
+      <div class="env-card">
+        <img src="logo.png" alt="">
+        <div class="n">Steve &amp; Pamela</div>
+        <div class="f">12 · 12 · 2026</div>
+      </div>
+      <div class="env-pocket"></div>
+      <div class="env-flap"></div>
+      <div class="env-seal"><img src="logo.png" alt=""></div>
+    </div>
+    <p class="sobre-hint">Toca el sobre para abrir</p>
+  </div>
+</div>
+
 <!-- ==================== HERO ==================== -->
 <header class="hero">
-  <div class="monogram" aria-hidden="true">S&amp;P</div>
+  <div class="monogram" aria-hidden="true"><img src="logo.png" alt=""></div>
+  <img class="hero-logo reveal" src="logo.png" alt="Monograma S y P">
   <p class="eyebrow reveal">Nos casamos</p>
   <h1 class="reveal">
     Steve
@@ -397,12 +493,13 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   <p class="eyebrow reveal">Nuestra historia</p>
   <h2 class="reveal">Momentos</h2>
   <div class="galeria reveal">
-    <!-- EDITAR: reemplaza cada placeholder por <img src="fotos/1.jpg" alt="Steve y Pamela"> -->
-    <div class="foto">Foto principal</div>
-    <div class="foto">Foto 2</div>
-    <div class="foto">Foto 3</div>
-    <div class="foto">Foto 4</div>
-    <div class="foto">Foto 5</div>
+    <!-- Sube tus imágenes a la carpeta fotos/ del repositorio con estos nombres.
+         Si una foto no existe todavía, se muestra el recuadro con la etiqueta. -->
+    <div class="foto"><img src="fotos/1.jpg" alt="Steve y Pamela" loading="lazy" onerror="this.remove()"><span>Foto principal</span></div>
+    <div class="foto"><img src="fotos/2.jpg" alt="Steve y Pamela" loading="lazy" onerror="this.remove()"><span>Foto 2</span></div>
+    <div class="foto"><img src="fotos/3.jpg" alt="Steve y Pamela" loading="lazy" onerror="this.remove()"><span>Foto 3</span></div>
+    <div class="foto"><img src="fotos/4.jpg" alt="Steve y Pamela" loading="lazy" onerror="this.remove()"><span>Foto 4</span></div>
+    <div class="foto"><img src="fotos/5.jpg" alt="Steve y Pamela" loading="lazy" onerror="this.remove()"><span>Foto 5</span></div>
   </div>
   <div class="thread" style="margin-top:4rem"></div>
 </section>
@@ -442,7 +539,7 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 </section>
 
 <footer>
-  <div class="mono">S &amp; P</div>
+  <img src="logo.png" alt="S y P" style="width:58px;display:block;margin:0 auto .9rem;opacity:.9">
   12 · 12 · 2026 · La Antigua Guatemala
 </footer>
 
@@ -502,6 +599,19 @@ document.getElementById("hoteles").innerHTML = CONFIG.hoteles.map(h => `
       <a href="${h.link}" target="_blank" rel="noopener">Cómo llegar</a>
     </div>
   </div>`).join("");
+
+// --- Sobre de apertura ---
+const sobre = document.getElementById("sobre");
+document.body.classList.add("locked");
+function abrirSobre(){
+  if(sobre.classList.contains("open")) return;
+  sobre.classList.add("open");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  setTimeout(()=>{ sobre.classList.add("fade"); document.body.classList.remove("locked"); }, reduce?0:1500);
+  setTimeout(()=>{ sobre.remove(); }, reduce?100:2300);
+}
+sobre.addEventListener("click", abrirSobre);
+sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); abrirSobre(); } });
 
 // --- Animaciones al hacer scroll ---
 const io = new IntersectionObserver(es => es.forEach(e => {
