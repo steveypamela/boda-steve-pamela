@@ -131,11 +131,28 @@ body.locked{overflow:hidden}
 @keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
 /* botonier2 fotográficas del sobre */
 .env-botonier2{
-  position:absolute;left:-13%;bottom:-26%;width:58%;
-  z-index:6;pointer-events:none;
+  position:absolute;
+
+  /* posición */
+  left:-8%;
+  bottom:-10%;
+
+  /* tamaño */
+  width:48%;
+  height:auto;
+
+  display:block;
+  z-index:6;
+  pointer-events:none;
+  object-fit:contain;
+
+  /* inclinación */
+  transform:rotate(-35deg);
+  transform-origin:center;
+
   filter:drop-shadow(0 6px 12px rgba(31,45,62,.28));
-  transform-origin:bottom left;
-  animation:brotar 1.1s ease .35s both, mecer 9s ease-in-out 1.6s infinite;
+
+  animation:brotar 1.1s ease .35s both;
 }
 .env-botonier2.chica{
   left:auto;right:-7%;bottom:auto;top:-13%;width:30%;
