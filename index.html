@@ -84,7 +84,7 @@ section{
   html{scroll-behavior:auto}
 }
 
-/* ---------- SOBRE DE APERTURA ---------- */
+/* ---------- SOBRE DE APERTURA (imagen sobre.png + sello.png) ---------- */
 body.locked{overflow:hidden}
 #sobre{
   position:fixed;inset:0;z-index:100;
@@ -92,105 +92,44 @@ body.locked{overflow:hidden}
   background:linear-gradient(180deg,#EEF1EA 0%,var(--paper) 100%);
   cursor:pointer;
   transition:opacity .7s ease;
-  /* forro floral del sobre (patrón SVG embebido) */
-  --liner:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84' viewBox='0 0 84 84'%3E%3Crect width='84' height='84' fill='%23F6F4EC'/%3E%3Cg fill='none' stroke='%2395A58D' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M14 70 C 20 56 22 44 20 30'/%3E%3Cpath d='M20 30 c -6 -2 -10 -8 -9 -14 c 6 1 10 6 9 14'/%3E%3Cpath d='M17 48 c -7 0 -12 -5 -12 -11 c 7 0 12 5 12 11'/%3E%3Cpath d='M22 58 c 6 -1 10 -6 10 -12 c -6 1 -10 6 -10 12'/%3E%3C/g%3E%3Cg fill='%239BAED4'%3E%3Ccircle cx='58' cy='24' r='4'/%3E%3Ccircle cx='66' cy='30' r='4'/%3E%3Ccircle cx='58' cy='36' r='4'/%3E%3Ccircle cx='50' cy='30' r='4'/%3E%3Ccircle cx='58' cy='30' r='3.4' fill='%235D7B9F'/%3E%3C/g%3E%3Cg fill='%23AEBDCF'%3E%3Ccircle cx='64' cy='62' r='2.6'/%3E%3Ccircle cx='70' cy='66' r='2.6'/%3E%3Ccircle cx='64' cy='70' r='2.6'/%3E%3Ccircle cx='58' cy='66' r='2.6'/%3E%3Ccircle cx='64' cy='66' r='2.2' fill='%235D7B9F'/%3E%3C/g%3E%3C/svg%3E");
 }
 #sobre.fade{opacity:0;pointer-events:none}
 .sobre-wrap{text-align:center;padding:1rem}
-.env{
-  position:relative;
-  width:min(86vw,400px);aspect-ratio:10/7;
-  margin:0 auto;
-  perspective:900px;
-}
-.env-back,.env-pocket,.env-flap{position:absolute;inset:0}
-.env-back{
-  background:linear-gradient(160deg,#5F7DA0,#47617E);
-  box-shadow:0 28px 64px rgba(31,45,62,.38);
-  z-index:1;
+.env{position:relative;width:min(88vw,430px);margin:0 auto}
+.env-flot{position:relative;z-index:2;animation:flotar 5.5s ease-in-out infinite}
+@keyframes flotar{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.env-img{width:100%;display:block;filter:drop-shadow(0 26px 46px rgba(31,45,62,.32))}
+.env-seal-img{
+  position:absolute;left:50%;top:50%;width:27%;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(0 5px 10px rgba(31,45,62,.35));
+  transition:opacity .5s ease,transform .5s ease;
 }
 .env-card{
-  position:absolute;left:5%;right:5%;top:4%;bottom:8%;
-  background:#FDFCF8;
-  border:1px solid #D9D5C9;
+  position:absolute;left:8%;right:8%;top:7%;bottom:12%;
+  background:#FDFCF8;border:1px solid #D9D5C9;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.55rem;
-  transition:transform 1s cubic-bezier(.22,.8,.3,1) .55s;
-  z-index:2;
+  transition:transform 1s cubic-bezier(.22,.8,.3,1) .45s;
+  z-index:1;
 }
-.env-card::before{
-  content:"";position:absolute;inset:7px;
-  border:1px solid var(--seaglass);
-  pointer-events:none;
-}
+.env-card::before{content:"";position:absolute;inset:7px;border:1px solid var(--seaglass);pointer-events:none}
 .env-card img{width:60px;opacity:.92}
 .env-card .n{font-family:var(--display);font-size:1.2rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
 .env-div{width:44px;height:1px;background:var(--seaglass)}
 .env-card .f{font-size:.6rem;letter-spacing:.34em;color:var(--stone);text-transform:uppercase}
-.env-pocket{
-  background:linear-gradient(180deg,#5D7B9F,#496285);
-  box-shadow:inset 0 16px 28px rgba(15,26,40,.18), inset 0 -2px 10px rgba(255,255,255,.08);
-  clip-path:polygon(0 0,50% 46%,100% 0,100% 100%,0 100%);
-  z-index:3;
-}
-.env-liner{
-  position:absolute;inset:2px;
-  clip-path:polygon(0 0,100% 0,50% 62%);
-  background:var(--liner);background-size:84px 84px;
-  z-index:1;
-}
-.env-flap{
-  clip-path:polygon(0 0,100% 0,50% 62%);
-  transform-origin:top;
-  transform-style:preserve-3d;
-  transition:transform .8s cubic-bezier(.6,.05,.3,1);
-  z-index:4;
-}
-.env-flap .cara{position:absolute;inset:0;backface-visibility:hidden}
-.env-flap .frente{
-  background:linear-gradient(180deg,#3E5678,#31455F);
-  box-shadow:inset 0 -10px 18px rgba(0,0,0,.18);
-}
-.env-flap .reverso{
-  transform:rotateX(180deg);
-  background:var(--liner);background-size:84px 84px;
-}
-.env-remitente{
-  position:absolute;left:0;right:0;bottom:8%;
-  text-align:center;pointer-events:none;z-index:4;
-  font-family:var(--display);font-style:italic;
-  font-size:.8rem;letter-spacing:.24em;color:#D7E0E9;
-}
-.env-seal{
-  position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
-  width:86px;height:86px;
-  border-radius:46% 54% 52% 48% / 55% 47% 53% 45%;
-  background:radial-gradient(circle at 34% 28%,#4D698D,#2A3C52 70%);
-  box-shadow:
-    0 6px 18px rgba(15,26,40,.5),
-    inset 0 2px 5px rgba(255,255,255,.28),
-    inset 0 -4px 8px rgba(0,0,0,.35);
-  display:flex;align-items:center;justify-content:center;
-  z-index:5;
-  transition:opacity .4s ease,transform .4s ease;
-}
-.env-seal::before{
-  content:"";position:absolute;inset:9px;
-  border-radius:inherit;
-  border:1px solid rgba(255,255,255,.32);
-}
-.env-seal img{width:52%;filter:brightness(0) invert(1);opacity:.95}
-#sobre.open .env-flap{transform:rotateX(180deg);z-index:1}
-#sobre.open .env-seal{opacity:0;transform:translate(-50%,-50%) scale(.6)}
 #sobre.open .env-card{transform:translateY(-62%)}
+#sobre.open .env-seal-img{opacity:0;transform:translate(-50%,-50%) scale(1.35) rotate(8deg)}
+#sobre.open .env-flot{animation:none}
+.sobre-frase{margin-top:2rem;font-family:var(--display);font-style:italic;font-size:1.05rem;letter-spacing:.14em;color:var(--ink)}
 .sobre-hint{
-  margin-top:2.2rem;
+  margin-top:.6rem;
   font-size:.66rem;letter-spacing:.4em;text-transform:uppercase;color:var(--stone);
   animation:pulse 2.6s ease-in-out infinite;
 }
 @keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
-/* flores del sobre */
+/* flores fotográficas del sobre */
 .env-flores{
-  position:absolute;left:-13%;bottom:-15%;width:58%;
+  position:absolute;left:-13%;bottom:-26%;width:58%;
   z-index:6;pointer-events:none;
   filter:drop-shadow(0 6px 12px rgba(31,45,62,.28));
   transform-origin:bottom left;
@@ -217,10 +156,63 @@ body.locked{overflow:hidden}
   10%{opacity:.95}
   100%{transform:translate3d(var(--x,4vw),108vh,0) rotate(260deg);opacity:0}
 }
+
+/* ---------- REPRODUCTOR DE MÚSICA ---------- */
+#player{
+  position:fixed;z-index:120;
+  display:flex;align-items:center;gap:.7rem;
+  transition:left 1s cubic-bezier(.6,.05,.3,1),bottom 1s cubic-bezier(.6,.05,.3,1),transform 1s cubic-bezier(.6,.05,.3,1);
+}
+#player.centro{left:50%;bottom:5%;transform:translateX(-50%)}
+#player.esquina{left:1rem;bottom:1rem;transform:none}
+#player.oculto{display:none}
+#player button{
+  width:52px;height:52px;border-radius:50%;
+  border:1px solid var(--ink);
+  background:rgba(253,252,248,.94);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:0 6px 16px rgba(31,45,62,.18);
+  transition:background .3s,color .3s;
+}
+#player button:hover{background:var(--ink);color:#FDFCF8}
+#player button svg{width:17px;height:17px;fill:currentColor}
+#player .lbl{
+  font-size:.62rem;letter-spacing:.32em;text-transform:uppercase;color:var(--stone);
+  background:rgba(253,252,248,.88);
+  padding:.55rem 1rem;border:1px solid var(--hairline);border-radius:999px;
+}
+#player.esquina .lbl{display:none}
+#player.on button{animation:latido 2.4s ease-in-out infinite}
+@keyframes latido{
+  0%,100%{box-shadow:0 6px 16px rgba(31,45,62,.18)}
+  50%{box-shadow:0 6px 24px rgba(93,123,159,.55)}
+}
+
+/* ---------- POLAROIDS "DESDE PEQUEÑOS" ---------- */
+.bebes{display:flex;justify-content:center;align-items:center;gap:.7rem;margin:2.2rem 0 1rem}
+.polaroid{
+  background:#fff;padding:.6rem .6rem 1.9rem;
+  border:1px solid var(--hairline);
+  box-shadow:0 12px 26px rgba(47,65,86,.18);
+  transform:rotate(-5deg);
+  width:min(40%,175px);margin:0;
+}
+.polaroid.der{transform:rotate(4deg)}
+.polaroid img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.polaroid figcaption{font-family:var(--display);font-style:italic;margin-top:.55rem;font-size:.9rem;color:var(--ink)}
+.bebes-amp{font-family:var(--display);font-style:italic;font-size:1.7rem;color:var(--sage)}
+.bebes-nota{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--stone);margin-bottom:1.8rem}
+
+/* ---------- INVITACIÓN PERSONALIZADA ---------- */
+.invitado-card{border:1px solid var(--hairline);background:#fff;padding:2.6rem 1.8rem;position:relative}
+.invitado-card::before{content:"";position:absolute;inset:8px;border:1px solid var(--seaglass);pointer-events:none}
+.invitado-nombre{font-family:var(--display);font-size:clamp(1.6rem,5vw,2.2rem);letter-spacing:.06em}
+.invitado-pases{font-size:.76rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sage-dk);margin-top:.3rem}
+
 @media (prefers-reduced-motion: reduce){
   .sobre-hint{animation:none}
-  .env-flap,.env-card,.env-seal,#sobre{transition:none}
-  .env-flores,.env-flores.chica{animation:none}
+  .env-flap,.env-card,.env-seal-img,#sobre,#player{transition:none}
+  .env-flot,.env-flores,.env-flores.chica,#player.on button{animation:none}
   #sobre .petalo,#sobre.open .petalo{animation:none;display:none}
 }
 
@@ -402,27 +394,23 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   <span class="petalo" style="left:94%; --d:3.0s; --r:.4s;  --x:-3vw"></span>
   <div class="sobre-wrap">
     <div class="env">
-      <div class="env-back"></div>
-      <div class="env-liner"></div>
+      <!-- tarjeta que sale del sobre -->
       <div class="env-card">
         <img src="logo.png" alt="" onerror="this.remove()">
         <div class="n">Steve &amp; Pamela</div>
         <div class="env-div"></div>
         <div class="f">12 · 12 · 2026</div>
       </div>
-      <div class="env-pocket"></div>
-      <div class="env-remitente">La Antigua Guatemala</div>
-      <div class="env-flap"><div class="cara frente"></div><div class="cara reverso"></div></div>
-      <div class="env-seal"><img src="logo.png" alt="" onerror="this.parentElement.innerHTML='<span style=\'font-family:var(--display);color:#fff;font-size:1.5rem;letter-spacing:.05em\'>SP</span>'"></div>
-
-      <!-- FLORES FOTOGRÁFICAS:
-           Sube al repositorio (raíz, junto a index.html):
-           - flores.png  → ramo principal, esquina inferior izquierda
-           - flores2.png → ramita opcional, esquina superior derecha
-           Deben ser PNG con fondo transparente. Si no existen, no se muestra nada. -->
+      <!-- TU SOBRE: sube sobre.png y sello.png a la raíz del repositorio.
+           Para ajustar la posición del sello cambia left/top/width en .env-seal-img -->
+      <div class="env-flot">
+        <img class="env-img" src="sobre.png" alt="Sobre de la invitación" onerror="this.remove()">
+        <img class="env-seal-img" src="sello.png" alt="" onerror="this.remove()">
+      </div>
       <img class="env-flores" src="flores.png" alt="" onerror="this.remove()">
       <img class="env-flores chica" src="flores2.png" alt="" onerror="this.remove()">
     </div>
+    <p class="sobre-frase">Tienes un mensaje especial</p>
     <p class="sobre-hint">Toca el sobre para abrir</p>
   </div>
 </div>
@@ -454,6 +442,16 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   <div class="thread" style="margin-top:4rem"></div>
 </section>
 
+<!-- ==================== INVITADO (personalizada por link) ==================== -->
+<section id="invitado" class="reveal" style="display:none;padding-top:0">
+  <div class="invitado-card">
+    <p class="eyebrow" style="margin-bottom:.9rem">Invitación especial para</p>
+    <div class="invitado-nombre" id="invNombre"></div>
+    <div class="env-div" style="margin:.9rem auto"></div>
+    <p class="invitado-pases" id="invPases"></p>
+  </div>
+</section>
+
 <!-- ==================== MENSAJE ==================== -->
 <section class="reveal">
   <p class="eyebrow">Con la bendición de Dios y nuestras familias</p>
@@ -462,7 +460,7 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
     <!-- EDITAR: mensaje personal de Steve y Pamela -->
     Después de tantos momentos juntos, llegó el día de dar el paso más
     importante. Nada nos haría más felices que celebrarlo contigo entre
-    las calles y ruinas de La Antigua.
+    las calles y ruinas de La Antigua Guatemala.
   </p>
   <div class="thread" style="margin-top:4rem"></div>
 </section>
@@ -582,6 +580,21 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 <section>
   <p class="eyebrow reveal">Nuestra historia</p>
   <h2 class="reveal">Momentos</h2>
+
+  <!-- Desde pequeños: sube fotos/bb1.jpg (Steve) y fotos/bb2.jpg (Pamela) -->
+  <div class="bebes reveal">
+    <figure class="polaroid">
+      <img src="fotos/bb1.jpg" alt="Steve de bebé" loading="lazy" onerror="this.closest('.bebes').style.display='none';document.querySelector('.bebes-nota').style.display='none'">
+      <figcaption>Steve</figcaption>
+    </figure>
+    <div class="bebes-amp">&amp;</div>
+    <figure class="polaroid der">
+      <img src="fotos/bb2.jpg" alt="Pamela de bebé" loading="lazy" onerror="this.closest('.bebes').style.display='none';document.querySelector('.bebes-nota').style.display='none'">
+      <figcaption>Pamela</figcaption>
+    </figure>
+  </div>
+  <p class="bebes-nota reveal">Desde pequeños, destinados a encontrarnos</p>
+
   <div class="galeria reveal">
     <!-- Sube tus imágenes a la carpeta fotos/ del repositorio con estos nombres.
          Si una foto no existe todavía, se muestra el recuadro con la etiqueta. -->
@@ -633,6 +646,17 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   12 · 12 · 2026 · La Antigua Guatemala
 </footer>
 
+<!-- ==================== MÚSICA ==================== -->
+<!-- Sube cancion.mp3 a la raíz del repositorio. Si no existe, el reproductor se oculta solo. -->
+<audio id="cancion" src="cancion.mp3" loop preload="metadata"></audio>
+<div id="player" class="centro">
+  <button id="btnPlay" aria-label="Reproducir o pausar nuestra canción">
+    <svg id="icoPlay" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>
+    <svg id="icoPause" viewBox="0 0 24 24" style="display:none"><path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z"/></svg>
+  </button>
+  <span class="lbl">Nuestra canción</span>
+</div>
+
 <script>
 /* ============================================================
    CONFIG — edita solo este bloque
@@ -670,9 +694,25 @@ function tick(){
 }
 tick(); setInterval(tick,1000);
 
+// --- Invitación personalizada por link (?i=Nombre&p=pases) ---
+const qs = new URLSearchParams(location.search);
+const invitado = qs.get("i") || qs.get("invitado");
+const pases = qs.get("p") || qs.get("pases");
+let msgWA = CONFIG.mensajeWhatsApp;
+if(invitado){
+  document.getElementById("invitado").style.display = "";
+  document.getElementById("invNombre").textContent = invitado;
+  document.getElementById("invPases").textContent = pases
+    ? `${pases} ${pases === "1" ? "pase reservado" : "pases reservados"} a su nombre`
+    : "Con todo nuestro cariño";
+  msgWA = pases
+    ? `¡Hola Steve! Somos ${invitado} y confirmamos nuestra asistencia a su boda el 12 de diciembre con nuestros ${pases} pases. 🤍`
+    : `¡Hola Steve! ${invitado} confirma asistencia a su boda el 12 de diciembre. 🤍`;
+}
+
 // --- WhatsApp ---
 document.getElementById("btnWhatsApp").href =
-  `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(CONFIG.mensajeWhatsApp)}`;
+  `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msgWA)}`;
 
 // --- Mapa ---
 document.getElementById("mapaCeremonia").href = CONFIG.mapaCeremonia;
@@ -690,12 +730,34 @@ document.getElementById("hoteles").innerHTML = CONFIG.hoteles.map(h => `
     </div>
   </div>`).join("");
 
+// --- Reproductor de música ---
+const audio = document.getElementById("cancion");
+const player = document.getElementById("player");
+const icoPlay = document.getElementById("icoPlay");
+const icoPause = document.getElementById("icoPause");
+audio.addEventListener("error", () => player.classList.add("oculto"));
+function pintaPlayer(){
+  const sonando = !audio.paused;
+  icoPlay.style.display = sonando ? "none" : "block";
+  icoPause.style.display = sonando ? "block" : "none";
+  player.classList.toggle("on", sonando);
+}
+document.getElementById("btnPlay").addEventListener("click", e => {
+  e.stopPropagation();
+  if(audio.paused){ audio.play().catch(()=>{}); } else { audio.pause(); }
+});
+audio.addEventListener("play", pintaPlayer);
+audio.addEventListener("pause", pintaPlayer);
+
 // --- Sobre de apertura ---
 const sobre = document.getElementById("sobre");
 document.body.classList.add("locked");
 function abrirSobre(){
   if(sobre.classList.contains("open")) return;
   sobre.classList.add("open");
+  audio.play().catch(()=>{});                      // la canción arranca al abrir
+  player.classList.remove("centro");               // y el reproductor viaja
+  player.classList.add("esquina");                 // a la esquina inferior izquierda
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   setTimeout(()=>{ sobre.classList.add("fade"); document.body.classList.remove("locked"); }, reduce?0:1500);
   setTimeout(()=>{ sobre.remove(); }, reduce?100:2300);
