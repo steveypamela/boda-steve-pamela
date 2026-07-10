@@ -905,14 +905,22 @@ const carrete = document.getElementById("carrete");
   carrete.addEventListener("touchstart", () => pausar(4000), {passive:true});
   carrete.addEventListener("wheel", () => pausar(4000), {passive:true});
   // avance automático derecha -> izquierda con bucle
+  // (la posición se acumula en una variable propia porque los navegadores
+  //  móviles redondean scrollLeft a enteros y los +0.45 se perderían)
+  let pos = 0;
   function paso(){
     const mitad = carrete.scrollWidth / 2;
     if(mitad > 0){
-      if(!pausa && !reduce && !document.body.classList.contains("locked")){
-        carrete.scrollLeft += 0.45;
+      if(pausa || arrastrando){
+        pos = carrete.scrollLeft;            // sincronizar tras la interacción
+      } else if(!document.body.classList.contains("locked")){
+        pos += 0.45;
+        if(pos >= mitad) pos -= mitad;
+        carrete.scrollLeft = pos;
       }
-      if(carrete.scrollLeft >= mitad) carrete.scrollLeft -= mitad;
-      else if(carrete.scrollLeft <= 0 && pausa) carrete.scrollLeft += mitad;
+      if(carrete.scrollLeft >= mitad){       // envolver también el arrastre manual
+        carrete.scrollLeft -= mitad; pos = carrete.scrollLeft;
+      }
     }
     requestAnimationFrame(paso);
   }
