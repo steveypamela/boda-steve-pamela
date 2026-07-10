@@ -129,19 +129,19 @@ body.locked{overflow:hidden}
   animation:pulse 2.6s ease-in-out infinite;
 }
 @keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
-/* ramo transparente único del sobre */
+/* ramo floral en la esquina inferior derecha del sobre */
 .env-botonier2{
   position:absolute;
-  left:-6%;
-  bottom:-6%;
-  width:43%;
+  right:-8%;
+  bottom:-8%;
+  width:46%;
   height:auto;
   display:block;
   z-index:6;
   pointer-events:none;
   object-fit:contain;
-  transform:rotate(-38deg);
-  transform-origin:center;
+  transform:rotate(-6deg);
+  transform-origin:bottom right;
   filter:drop-shadow(0 6px 12px rgba(31,45,62,.28));
   animation:brotar 1.1s ease .35s both;
 }
@@ -409,8 +409,8 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
       <img class="env-img" src="sobre.png" alt="Sobre de la invitación" onerror="this.remove()">
       <img class="env-seal-img" src="sello.png" alt="" onerror="this.remove()">
       <img class="env-botonier2"
-           src="botonier2_esquina.png?v=1"
-           alt="Detalle floral"
+           src="botonier2_esquina.png?v=2"
+           alt="Detalle floral de esquina"
            onerror="console.error('No se encontró botonier2_esquina.png'); this.style.display='none';">
     </div>
     <p class="sobre-frase">Tienes un mensaje especial</p>
