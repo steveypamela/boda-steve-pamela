@@ -409,18 +409,16 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   <span class="petalo" style="left:94%; --d:3.0s; --r:.4s;  --x:-3vw"></span>
   <div class="sobre-wrap">
     <div class="env">
-      <!-- Sobre: usa tu sobre.png original y tu sello.png -->
-      <img class="env-img" src="sobre.png" alt="Sobre de la invitación" onerror="this.remove()">
-      <img class="env-seal-img" src="sello.png" alt="" onerror="this.remove()">
-      <img class="env-botonier2"
-           src="./botonier2.png"
-           alt="Detalle floral"
-           onerror="if(!this.dataset.intento){this.dataset.intento='jpeg';this.src='./botonier2.jpeg';}else if(this.dataset.intento==='jpeg'){this.dataset.intento='jpg';this.src='./botonier2.jpg';}else{this.style.display='none';}">
-      <img class="env-botonier2 chica"
-           src="./botonier2.png"
-           alt=""
-           aria-hidden="true"
-           onerror="if(!this.dataset.intento){this.dataset.intento='jpeg';this.src='./botonier2.jpeg';}else if(this.dataset.intento==='jpeg'){this.dataset.intento='jpg';this.src='./botonier2.jpg';}else{this.style.display='none';}">
+    <!-- Sobre: usa tu sobre.png original y tu sello.png -->
+<img class="env-img" src="sobre.png" alt="Sobre de la invitación" onerror="this.remove()">
+
+<img class="env-seal-img" src="sello.png" alt="" onerror="this.remove()">
+
+<!-- Ramo decorativo -->
+<img class="env-botonier2"
+     src="botonier2.png"
+     alt="Detalle floral"
+     onerror="this.style.display='none';">
     </div>
     <p class="sobre-frase">Tienes un mensaje especial</p>
     <p class="sobre-hint">Toca el sobre para abrir</p>
