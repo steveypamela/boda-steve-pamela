@@ -129,15 +129,15 @@ body.locked{overflow:hidden}
   animation:pulse 2.6s ease-in-out infinite;
 }
 @keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
-/* boutonniere_invitacion fotográficas del sobre */
-.env-boutonniere_invitacion{
+/* botonier2 fotográficas del sobre */
+.env-botonier2{
   position:absolute;left:-13%;bottom:-26%;width:58%;
   z-index:6;pointer-events:none;
   filter:drop-shadow(0 6px 12px rgba(31,45,62,.28));
   transform-origin:bottom left;
   animation:brotar 1.1s ease .35s both, mecer 9s ease-in-out 1.6s infinite;
 }
-.env-boutonniere_invitacion.chica{
+.env-botonier2.chica{
   left:auto;right:-7%;bottom:auto;top:-13%;width:30%;
   transform-origin:top right;
   animation:brotar 1.1s ease .6s both, mecer 10s ease-in-out 2s infinite;
@@ -220,7 +220,7 @@ body.locked{overflow:hidden}
 @media (prefers-reduced-motion: reduce){
   .sobre-hint{animation:none}
   .env-flap,.env-card,.env-seal-img,#sobre,#player{transition:none}
-  .env,.env-boutonniere_invitacion,.env-boutonniere_invitacion.chica,#player.on button{animation:none}
+  .env,.env-botonier2,.env-botonier2.chica,#player.on button{animation:none}
   #sobre .petalo,#sobre.open .petalo{animation:none;display:none}
 }
 
@@ -405,8 +405,8 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
       <!-- Sobre: usa tu sobre.png original y tu sello.png -->
       <img class="env-img" src="sobre.png" alt="Sobre de la invitación" onerror="this.remove()">
       <img class="env-seal-img" src="sello.png" alt="" onerror="this.remove()">
-      <img class="env-boutonniere_invitacion" src="boutonniere_invitacion.png" alt="" onerror="this.remove()">
-      <img class="env-boutonniere_invitacion chica" src="boutonniere_invitacion2.png" alt="" onerror="this.remove()">
+      <img class="env-botonier2" src="botonier2.png" alt="" onerror="this.remove()">
+      <img class="env-botonier2 chica" src="botonier22.png" alt="" onerror="this.remove()">
     </div>
     <p class="sobre-frase">Tienes un mensaje especial</p>
     <p class="sobre-hint">Toca el sobre para abrir</p>
