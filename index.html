@@ -99,48 +99,29 @@ body.locked{overflow:hidden}
 #sobre.open .env{animation:none}
 @keyframes flotar{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .env-fondo{width:100%;display:block;position:relative;z-index:1;filter:drop-shadow(0 26px 46px rgba(31,45,62,.32))}
-/* la "boca" del sobre: la tarjeta solo es visible dentro del triángulo del forro
-   y por encima del sobre; se extiende hacia arriba para que la tarjeta
-   nunca se recorte al salir */
-.env{perspective:1100px}
-.env-boca{
-  position:absolute;left:0;right:0;top:-50%;height:150%;
-  z-index:2;pointer-events:none;
-  clip-path:polygon(0 0,100% 0,100% 45.2%,50% 71%,0 45.2%);
-}
-.env-frente{position:absolute;inset:0;width:100%;z-index:3;pointer-events:none}
-.env-solapa{
-  position:absolute;inset:0;z-index:4;pointer-events:none;
-  transform-style:preserve-3d;
-  transform-origin:50% 17.7%;
-  transition:transform 1s cubic-bezier(.55,.06,.28,.99) .3s;
-}
-.env-solapa img,.env-solapa .reverso{position:absolute;inset:0;width:100%;backface-visibility:hidden}
-.env-solapa .reverso{
-  transform:rotateX(180deg);transform-origin:50% 17.7%;
-  clip-path:polygon(2% 17.6%,98% 17.6%,50% 56.8%);
-  background:linear-gradient(180deg,#8FA5C3 18%,#C9D4E4 57%);
-}
-#sobre.open .env-solapa{transform:rotateX(178deg);z-index:1}
+/* apertura cinematográfica: el sello se rompe y el sobre hace zoom
+   hacia la cámara desenfocándose, fundiendo hacia la invitación */
+.env-img{width:100%;display:block;filter:drop-shadow(0 26px 46px rgba(31,45,62,.32))}
 .env-seal-img{
   position:absolute;left:50%;top:56.5%;width:21%;
-  transform:translate(-50%,-50%);z-index:5;
+  transform:translate(-50%,-50%);
   filter:drop-shadow(0 5px 10px rgba(31,45,62,.35));
-  transition:opacity .45s ease,transform .45s ease;
+  transition:opacity .5s ease,transform .5s ease;
 }
-#sobre.open .env-seal-img{opacity:0;transform:translate(-50%,-50%) scale(1.3) rotate(8deg)}
-.env-card{
-  position:absolute;left:24%;right:24%;top:50%;height:33.4%;
-  background:#FDFCF8;border:1px solid #D9D5C9;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.45rem;
-  transition:transform 1.1s cubic-bezier(.22,.8,.3,1) .75s;
+#sobre.open .env-seal-img{opacity:0;transform:translate(-50%,-50%) scale(1.4) rotate(10deg)}
+#sobre.open .env{
+  animation:none;
+  transform:scale(3.1) translateY(7%);
+  opacity:0;
+  filter:blur(14px);
+  transition:transform 1.6s cubic-bezier(.5,.02,.3,1) .35s,
+             opacity 1.15s ease .8s,
+             filter 1.6s ease .35s;
+  will-change:transform,opacity,filter;
 }
-.env-card::before{content:"";position:absolute;inset:6px;border:1px solid var(--seaglass);pointer-events:none}
-.env-card img{width:42px;opacity:.92}
-.env-card .n{font-family:var(--display);font-size:1rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
-.env-div{width:40px;height:1px;background:var(--seaglass)}
-.env-card .f{font-size:.56rem;letter-spacing:.3em;color:var(--stone);text-transform:uppercase}
-#sobre.open .env-card{transform:translateY(-118%)}
+#sobre.open .sobre-frase,#sobre.open .sobre-hint{opacity:0;transition:opacity .4s ease}
+.env-div{width:44px;height:1px;background:var(--seaglass)}
+
 .sobre-frase{margin-top:2rem;font-family:var(--display);font-style:italic;font-size:1.05rem;letter-spacing:.14em;color:var(--ink)}
 .sobre-hint{
   margin-top:.6rem;
@@ -229,6 +210,12 @@ body.locked{overflow:hidden}
 .invitado-card::before{content:"";position:absolute;inset:8px;border:1px solid var(--seaglass);pointer-events:none}
 .invitado-nombre{font-family:var(--display);font-size:clamp(1.6rem,5vw,2.2rem);letter-spacing:.06em}
 .invitado-pases{font-size:.76rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sage-dk);margin-top:.3rem}
+
+/* ---------- QR DEL ÁLBUM ---------- */
+.qr-marco{display:inline-block;background:#fff;border:1px solid var(--hairline);padding:1.1rem;margin-top:2.2rem;position:relative}
+.qr-marco::before{content:"";position:absolute;inset:7px;border:1px solid var(--seaglass);pointer-events:none}
+#qr{width:176px;height:176px}
+#qr img,#qr canvas{width:176px !important;height:176px !important;display:block}
 
 @media (prefers-reduced-motion: reduce){
   .sobre-hint{animation:none}
@@ -415,23 +402,8 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   <span class="petalo" style="left:94%; --d:3.0s; --r:.4s;  --x:-3vw"></span>
   <div class="sobre-wrap">
     <div class="env">
-      <!-- SOBRE ANIMADO EN CAPAS
-           Sube a la raíz del repositorio: sobre-fondo.png, sobre-frente.png,
-           sobre-solapa.png (generados a partir de tu sobre.png) y sello.png -->
-      <img class="env-fondo" src="sobre-fondo.png" alt="Sobre de la invitación" onerror="this.remove()">
-      <div class="env-boca">
-        <div class="env-card">
-          <img src="logo.png" alt="" onerror="this.remove()">
-          <div class="n">Steve &amp; Pamela</div>
-          <div class="env-div"></div>
-          <div class="f">12 · 12 · 2026</div>
-        </div>
-      </div>
-      <img class="env-frente" src="sobre-frente.png" alt="" onerror="this.remove()">
-      <div class="env-solapa">
-        <img src="sobre-solapa.png" alt="" onerror="this.parentElement.remove()">
-        <div class="reverso"></div>
-      </div>
+      <!-- Sobre: usa tu sobre.png original y tu sello.png -->
+      <img class="env-img" src="sobre.png" alt="Sobre de la invitación" onerror="this.remove()">
       <img class="env-seal-img" src="sello.png" alt="" onerror="this.remove()">
       <img class="env-flores" src="flores.png" alt="" onerror="this.remove()">
       <img class="env-flores chica" src="flores2.png" alt="" onerror="this.remove()">
@@ -597,8 +569,13 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
     <i style="background:#7E8D77" title="Eucalyptus"></i>
     <i style="background:#95A58D" title="Sage"></i>
     <i style="background:#C0CFB2" title="Light Sage"></i>
+    <i style="background:#E8C39E" title="Beige"></i>
+    <i style="background:#EACCAD" title="Champán"></i>
+    <i style="background:#F3DBC3" title="Nude"></i>
+    <i style="background:#615E5B" title="Gris carbón"></i>
+    <i style="background:#848382" title="Gris"></i>
   </div>
-  <p class="paleta-nota">Navy · Teal · Azul polvoso · Sea glass · Moss · Eucalipto · Salvia</p>
+  <p class="paleta-nota">Navy · Azul polvoso · Sea glass · Eucalipto · Salvia · Beige · Nude · Gris</p>
   <div class="thread" style="margin-top:3rem"></div>
 </section>
 
@@ -667,6 +644,17 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   </div>
 </section>
 
+<!-- ==================== ÁLBUM DE FOTOS (QR) ==================== -->
+<section id="album" class="reveal" style="display:none">
+  <p class="eyebrow">Durante la celebración</p>
+  <h2>Comparte tus fotos</h2>
+  <p style="color:var(--stone);max-width:440px;margin:0 auto">
+    Escanea el código y sube las fotos y videos que tomes durante la boda
+    a nuestro álbum compartido. Después del gran día podremos revivirlo juntos.
+  </p>
+  <div class="qr-marco"><div id="qr"></div></div>
+</section>
+
 <footer>
   <img src="logo.png" alt="" onerror="this.remove()" style="width:58px;display:block;margin:0 auto .9rem;opacity:.9">
   12 · 12 · 2026 · La Antigua Guatemala
@@ -683,6 +671,7 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   <span class="lbl">Nuestra canción</span>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 /* ============================================================
    CONFIG — edita solo este bloque
@@ -694,6 +683,10 @@ const CONFIG = {
   // WhatsApp de Steve (código de país + número, sin "+" ni espacios)
   whatsapp: "50241024231",
   mensajeWhatsApp: "¡Hola Steve! Confirmo mi asistencia a su boda el 12 de diciembre. Asistiremos ___ personas. 🤍",
+
+  // Link del álbum compartido de fotos (Google Photos, Drive, etc.)
+  // Cuando lo tengas, pégalo aquí y el QR aparecerá al final de la invitación:
+  albumUrl: "",
 
   // Link de Google Maps del lugar
   mapaCeremonia: "https://maps.google.com/?q=Iglesia+San+Jose+El+Viejo+Antigua+Guatemala",
@@ -756,6 +749,15 @@ document.getElementById("hoteles").innerHTML = CONFIG.hoteles.map(h => `
     </div>
   </div>`).join("");
 
+// --- Código QR del álbum de fotos ---
+if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
+  document.getElementById("album").style.display = "";
+  new QRCode(document.getElementById("qr"), {
+    text: CONFIG.albumUrl, width: 176, height: 176,
+    colorDark: "#2F4156", colorLight: "#ffffff"
+  });
+}
+
 // --- Reproductor de música ---
 const audio = document.getElementById("cancion");
 const player = document.getElementById("player");
@@ -782,11 +784,16 @@ function abrirSobre(){
   if(sobre.classList.contains("open")) return;
   sobre.classList.add("open");
   audio.play().catch(()=>{});                      // la canción arranca al abrir
+  document.querySelectorAll(".hero .reveal").forEach((el,i)=>{   // entrada escalonada
+    el.classList.remove("in");
+    el.style.transitionDelay = (1.1 + i*.18) + "s";
+    requestAnimationFrame(()=>el.classList.add("in"));
+  });
   player.classList.remove("centro");               // y el reproductor viaja
   player.classList.add("esquina");                 // a la esquina inferior izquierda
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  setTimeout(()=>{ sobre.classList.add("fade"); document.body.classList.remove("locked"); }, reduce?0:2100);
-  setTimeout(()=>{ sobre.remove(); }, reduce?100:3000);
+  setTimeout(()=>{ sobre.classList.add("fade"); document.body.classList.remove("locked"); }, reduce?0:1300);
+  setTimeout(()=>{ sobre.remove(); }, reduce?100:2400);
 }
 sobre.addEventListener("click", abrirSobre);
 sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); abrirSobre(); } });
