@@ -314,8 +314,9 @@ body.locked{overflow:hidden}
 .portada-marco{position:relative;max-width:720px;margin:0 auto}
 .portada-marco img{
   width:100%;display:block;
-  /* filtro antigüesco: sepia suave, colores apagados, como fotografía de época */
-  filter:sepia(.32) saturate(.78) contrast(.94) brightness(1.02);
+  /* filtro antigüesco intenso: casi blanco y negro, con un resto
+     de calidez sepia como fotografía revelada de época */
+  filter:grayscale(.85) sepia(.22) contrast(1.04) brightness(1.03);
 }
 /* viñeta sutil para dar profundidad y legibilidad a los nombres */
 .portada-marco::after{
