@@ -246,6 +246,35 @@ body.locked{overflow:hidden}
 .bebes-amp{font-family:var(--display);font-style:italic;font-size:1.7rem;color:var(--sage)}
 .bebes-nota{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--stone);margin-bottom:1.8rem}
 
+/* ---------- CARRETE DE FOTOS DE NOVIOS ---------- */
+.carrete-wrap{
+  margin:2.4rem calc(50% - 50vw) 2.8rem;   /* sangrado a todo el ancho de pantalla */
+}
+.carrete-titulo{
+  font-family:var(--display);font-style:italic;
+  font-size:1rem;letter-spacing:.16em;color:var(--ink);
+  margin-bottom:1.2rem;
+}
+.carrete{
+  display:flex;gap:.7rem;
+  overflow-x:auto;overscroll-behavior-x:contain;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  padding:.4rem 0;cursor:grab;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+}
+.carrete::-webkit-scrollbar{display:none}
+.carrete.arrastrando{cursor:grabbing}
+.carrete img{
+  height:150px;width:auto;flex:0 0 auto;
+  background:#fff;border:1px solid var(--hairline);
+  padding:4px;                              /* marco fino tipo impresión */
+  box-shadow:0 6px 14px rgba(47,65,86,.10);
+  user-select:none;-webkit-user-drag:none;
+  pointer-events:none;                       /* el arrastre lo maneja el contenedor */
+}
+@media (max-width:560px){ .carrete img{height:124px} }
+
 /* ---------- INVITACIÓN PERSONALIZADA ---------- */
 .invitado-card{border:1px solid var(--hairline);background:#fff;padding:2.6rem 1.8rem;position:relative}
 .invitado-card::before{content:"";position:absolute;inset:8px;border:1px solid var(--seaglass);pointer-events:none}
@@ -646,6 +675,12 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   </div>
   <p class="bebes-nota reveal">Desde pequeños, destinados a encontrarnos</p>
 
+  <!-- Carrete de fotos de novios: sube fotos/10.jpg, 11.jpg... (rango en CONFIG) -->
+  <div class="carrete-wrap reveal">
+    <p class="carrete-titulo">Nuestros años de novios</p>
+    <div class="carrete" id="carrete" aria-label="Fotos de nuestro noviazgo"></div>
+  </div>
+
   <div class="galeria reveal">
     <!-- Sube tus imágenes a la carpeta fotos/ del repositorio con estos nombres.
          Si una foto no existe todavía, se muestra el recuadro con la etiqueta. -->
@@ -732,6 +767,12 @@ const CONFIG = {
   whatsapp: "50241024231",
   mensajeWhatsApp: "¡Hola Steve! Confirmo mi asistencia a su boda el 12 de diciembre. Asistiremos ___ personas. 🤍",
 
+  // Carrete de fotos de novios: usa fotos/10.jpeg hasta fotos/20.jpeg
+  // Si subes más o menos fotos, solo cambia estos números o la extensión:
+  carreteDesde: 10,
+  carreteHasta: 20,
+  carreteExt: "jpeg",
+
   // Link del álbum compartido de fotos (Google Photos, Drive, etc.)
   // Cuando lo tengas, pégalo aquí y el QR aparecerá al final de la invitación:
   albumUrl: "https://albumdrive.app/es/go/k0ufx5",
@@ -805,6 +846,59 @@ if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
     colorDark: "#2F4156", colorLight: "#ffffff"
   });
 }
+
+// --- Carrete de fotos de novios ---
+const carrete = document.getElementById("carrete");
+(function(){
+  if(!carrete) return;
+  // dos copias del set para lograr el bucle infinito
+  for(let vuelta = 0; vuelta < 2; vuelta++){
+    for(let n = CONFIG.carreteDesde; n <= CONFIG.carreteHasta; n++){
+      const img = document.createElement("img");
+      img.src = `fotos/${n}.${CONFIG.carreteExt || "jpg"}`;
+      img.alt = "Steve y Pamela de novios";
+      img.loading = "lazy";
+      img.onerror = () => img.remove();
+      carrete.appendChild(img);
+    }
+  }
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let pausa = false, timerReanudar = null;
+  function pausar(ms){
+    pausa = true;
+    clearTimeout(timerReanudar);
+    timerReanudar = setTimeout(()=>{ pausa = false; }, ms);
+  }
+  // arrastre con cursor (en táctil el scroll nativo ya funciona)
+  let arrastrando = false, xIni = 0, scrollIni = 0;
+  carrete.addEventListener("pointerdown", e => {
+    arrastrando = true; xIni = e.clientX; scrollIni = carrete.scrollLeft;
+    carrete.classList.add("arrastrando");
+    carrete.setPointerCapture(e.pointerId);
+    pausar(4000);
+  });
+  carrete.addEventListener("pointermove", e => {
+    if(arrastrando) carrete.scrollLeft = scrollIni - (e.clientX - xIni);
+  });
+  ["pointerup","pointercancel"].forEach(ev => carrete.addEventListener(ev, () => {
+    arrastrando = false; carrete.classList.remove("arrastrando");
+  }));
+  carrete.addEventListener("touchstart", () => pausar(4000), {passive:true});
+  carrete.addEventListener("wheel", () => pausar(4000), {passive:true});
+  // avance automático derecha -> izquierda con bucle
+  function paso(){
+    const mitad = carrete.scrollWidth / 2;
+    if(mitad > 0){
+      if(!pausa && !reduce && !document.body.classList.contains("locked")){
+        carrete.scrollLeft += 0.45;
+      }
+      if(carrete.scrollLeft >= mitad) carrete.scrollLeft -= mitad;
+      else if(carrete.scrollLeft <= 0 && pausa) carrete.scrollLeft += mitad;
+    }
+    requestAnimationFrame(paso);
+  }
+  requestAnimationFrame(paso);
+})();
 
 // --- Reproductor de música ---
 const audio = document.getElementById("cancion");
