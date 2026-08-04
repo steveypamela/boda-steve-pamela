@@ -462,18 +462,21 @@ body.locked{overflow:hidden}
 /* ---------- RSVP: FORMULARIO DE CONFIRMACIÓN ---------- */
 .rsvp-estado{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sage-lt);margin-top:2rem}
 .rsvp-lugares{
-  font-family:var(--display);font-size:1.15rem;color:var(--paper);
-  margin:2rem auto 0;max-width:460px;
+  font-family:var(--display);font-size:1.2rem;line-height:1.6;color:var(--paper);
+  margin:2.8rem auto 0;max-width:460px;
 }
 .rsvp-lugares b{font-style:italic;color:var(--sage-lt);font-weight:400}
-.rsvp-nota{font-size:.74rem;color:#93A0AF;margin-top:.5rem;letter-spacing:.04em}
+.rsvp-nota{
+  font-size:.76rem;color:#93A0AF;letter-spacing:.04em;line-height:1.7;
+  max-width:380px;margin:1.1rem auto 0;
+}
 .campo-lbl{
   display:block;font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;
-  color:var(--sage-lt);margin:2.4rem 0 1rem;
+  color:var(--sage-lt);margin:3.4rem 0 1.4rem;
 }
 .rsvp-form{max-width:440px;margin:0 auto;text-align:center}
 /* botones sí / no */
-.sino{display:flex;gap:.8rem;justify-content:center;margin-top:1.6rem;flex-wrap:wrap}
+.sino{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap}
 .sino button{
   flex:1 1 170px;padding:1rem .8rem;cursor:pointer;
   background:transparent;color:var(--paper);
@@ -485,7 +488,7 @@ body.locked{overflow:hidden}
 .sino button:hover{border-color:var(--paper)}
 .sino button[aria-pressed="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
 /* selector de cantidad */
-.chips{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.chips{display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;margin-bottom:.4rem}
 .chips button{
   width:52px;height:52px;border-radius:50%;cursor:pointer;
   background:transparent;color:var(--paper);
@@ -508,10 +511,10 @@ body.locked{overflow:hidden}
   outline:none;border-color:var(--sage-lt);background:rgba(248,249,246,.1);
 }
 .rsvp-form input::placeholder,.rsvp-form textarea::placeholder{color:#7C8896}
-.rsvp-form textarea{resize:vertical;min-height:84px}
+.rsvp-form textarea{resize:vertical;min-height:96px;line-height:1.6}
 /* botón enviar */
 .btn-enviar{
-  margin-top:2rem;padding:1rem 2.6rem;cursor:pointer;
+  margin-top:3rem;padding:1rem 2.6rem;cursor:pointer;
   background:transparent;color:var(--paper);border:1px solid var(--paper);
   font-family:var(--body);font-size:.72rem;font-weight:300;
   letter-spacing:.3em;text-transform:uppercase;
@@ -519,6 +522,18 @@ body.locked{overflow:hidden}
 }
 .btn-enviar:hover:not(:disabled){background:var(--paper);color:var(--ink)}
 .btn-enviar:disabled{opacity:.45;cursor:default}
+/* separadores finos entre bloques del formulario */
+#bloqueAsisten{
+  margin-top:3.2rem;padding-top:.4rem;
+  border-top:1px solid rgba(248,249,246,.14);
+}
+#bloqueAsisten .campo-lbl{margin-top:2.6rem}
+#bloqueNombres{margin-top:.6rem}
+#bloqueComentarios{
+  margin-top:3.2rem;padding-top:.4rem;
+  border-top:1px solid rgba(248,249,246,.14);
+}
+#bloqueComentarios .campo-lbl{margin-top:2.6rem}
 .rsvp-msg{margin-top:1.2rem;font-size:.85rem;min-height:1.3rem;color:var(--sage-lt)}
 .rsvp-msg.error{color:#E8B4B4}
 /* pantalla de agradecimiento */
@@ -857,9 +872,11 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
         <div id="bloqueNombres"></div>
       </div>
 
-      <label class="campo-lbl" for="rsvpComentarios">Un mensaje para nosotros (opcional)</label>
-      <textarea id="rsvpComentarios" maxlength="300"
-                placeholder="Alergias, restricciones de comida o unas palabras para los novios…"></textarea>
+      <div id="bloqueComentarios">
+        <label class="campo-lbl" for="rsvpComentarios">Un mensaje para nosotros (opcional)</label>
+        <textarea id="rsvpComentarios" maxlength="300"
+                  placeholder="Alergias, restricciones de comida o unas palabras para los novios…"></textarea>
+      </div>
 
       <button type="button" class="btn-enviar" id="btnEnviar" disabled>Enviar confirmación</button>
       <p class="rsvp-msg" id="rsvpMsg"></p>
@@ -1084,7 +1101,15 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
   const elCargando = $("rsvpCargando"), elSinCodigo = $("rsvpSinCodigo"),
         elForm = $("rsvpForm"), elGracias = $("rsvpGracias"), elMsg = $("rsvpMsg");
 
-  const codigo = (qs.get("c") || qs.get("codigo") || "").trim();
+  // El código puede venir como ?c=XXXXXX o como /XXXXXX al final de la ruta
+  // (links cortos con Netlify). Se acepta cualquiera de las dos formas.
+  function leerCodigo(){
+    const porQuery = (qs.get("c") || qs.get("codigo") || "").trim();
+    if(porQuery) return porQuery;
+    const ultimo = location.pathname.split("/").filter(Boolean).pop() || "";
+    return /^[A-Za-z0-9]{6}$/.test(ultimo) ? ultimo : "";
+  }
+  const codigo = leerCodigo();
   let datos = null;      // {nombre, pases, estado, asisten, comentarios}
   let asiste = null;     // true / false / null
   let cantidad = 1;
@@ -1143,6 +1168,9 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
   /* --- campos para nombres de acompañantes --- */
   function pintarNombres(){
     const cont = $("bloqueNombres");
+    // Si la invitación ya nombra a las personas (ej. "Pablo Herrera y Claudia
+    // Monzón"), no tiene sentido pedirlos: solo se piden cuando la hoja lo indica.
+    if(!datos || !datos.pedirNombres){ cont.innerHTML = ""; return; }
     const previos = [...cont.querySelectorAll("input")].map(i => i.value);
     cont.innerHTML = "";
     if(cantidad <= 1) return;
