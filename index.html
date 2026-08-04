@@ -809,6 +809,17 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   </p>
 </section>
 
+<!-- ==================== ÁLBUM DE FOTOS (QR) ==================== -->
+<section id="album" class="reveal" style="display:none">
+  <p class="eyebrow">Durante la celebración</p>
+  <h2>Comparte tus fotos</h2>
+  <p style="color:var(--stone);max-width:440px;margin:0 auto">
+    Escanea el código y sube las fotos y videos que tomes durante la boda
+    a nuestro álbum compartido. Después del gran día podremos revivirlo juntos.
+  </p>
+  <div class="qr-marco"><div id="qr"></div></div>
+</section>
+
 <!-- ==================== RSVP ==================== -->
 <section class="rsvp" id="rsvp">
   <div class="inner reveal">
@@ -864,16 +875,6 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   </div>
 </section>
 
-<!-- ==================== ÁLBUM DE FOTOS (QR) ==================== -->
-<section id="album" class="reveal" style="display:none">
-  <p class="eyebrow">Durante la celebración</p>
-  <h2>Comparte tus fotos</h2>
-  <p style="color:var(--stone);max-width:440px;margin:0 auto">
-    Escanea el código y sube las fotos y videos que tomes durante la boda
-    a nuestro álbum compartido. Después del gran día podremos revivirlo juntos.
-  </p>
-  <div class="qr-marco"><div id="qr"></div></div>
-</section>
 
 <footer>
   <img src="logo.png" alt="" onerror="this.remove()" style="width:58px;display:block;margin:0 auto .9rem;opacity:.9">
@@ -902,7 +903,7 @@ const CONFIG = {
 
   // URL de la app web de Google Apps Script (la que termina en /exec).
   // Mientras esté vacía, la confirmación se hace por WhatsApp como antes.
-  apiUrl: "https://script.google.com/macros/s/AKfycbw2Kin1kGG8My5U27wseAuf84GCMXwb_hJ8Rrlk5GnPNg2A0l2T-Tmnjxy-Q_5WMdObjQ/exec",
+  apiUrl: "",
 
   // WhatsApp de Steve (código de país + número, sin "+" ni espacios)
   whatsapp: "50241024231",
