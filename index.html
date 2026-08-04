@@ -25,6 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Karla:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -89,37 +90,34 @@ section{
 /* Texto sobre la solapa del sobre */
 .texto-solapa{
     position:absolute;
-    top:21%;
+    top:20%;
     left:50%;
     transform:translateX(-50%);
-    width:80%;
+    width:70%;
     text-align:center;
     pointer-events:none;
     z-index:5;
 }
+
 .texto-solapa .linea1{
     display:block;
-    color:rgba(233,238,245,.72);
-    font-size:.6rem;
-    letter-spacing:.44em;
+    color:rgba(255,255,255,.85);
+    font-size:.50rem;
+    letter-spacing:.30em;
     text-transform:uppercase;
     font-family:var(--body);
-    font-weight:300;
+     margin-bottom:0;
 }
-.texto-solapa::after{
-    content:"";
-    display:block;
-    width:38px;height:1px;
-    margin:.55rem auto;
-    background:rgba(233,238,245,.4);
-}
+
+
 .texto-solapa .linea2{
     display:block;
-    color:#EDF1F7;
-    font-family:var(--display);
-    font-style:italic;
-    font-size:1.3rem;
-    letter-spacing:.12em;
+    position:relative;
+    top:-12px;
+    color:white;
+    font-family:"Great Vibes", cursive;
+    font-size:2rem;
+    text-shadow:0 2px 6px rgba(0,0,0,.25);
 }
 
 
@@ -460,6 +458,85 @@ body.locked{overflow:hidden}
 .rsvp .btn{border-color:var(--paper);color:var(--paper);margin-top:2.2rem}
 .rsvp .btn:hover,.rsvp .btn:focus-visible{background:var(--paper);color:var(--ink)}
 
+
+/* ---------- RSVP: FORMULARIO DE CONFIRMACIÓN ---------- */
+.rsvp-estado{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sage-lt);margin-top:2rem}
+.rsvp-lugares{
+  font-family:var(--display);font-size:1.15rem;color:var(--paper);
+  margin:2rem auto 0;max-width:460px;
+}
+.rsvp-lugares b{font-style:italic;color:var(--sage-lt);font-weight:400}
+.rsvp-nota{font-size:.74rem;color:#93A0AF;margin-top:.5rem;letter-spacing:.04em}
+.campo-lbl{
+  display:block;font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--sage-lt);margin:2.4rem 0 1rem;
+}
+.rsvp-form{max-width:440px;margin:0 auto;text-align:center}
+/* botones sí / no */
+.sino{display:flex;gap:.8rem;justify-content:center;margin-top:1.6rem;flex-wrap:wrap}
+.sino button{
+  flex:1 1 170px;padding:1rem .8rem;cursor:pointer;
+  background:transparent;color:var(--paper);
+  border:1px solid rgba(248,249,246,.35);
+  font-family:var(--body);font-size:.7rem;font-weight:300;
+  letter-spacing:.24em;text-transform:uppercase;
+  transition:background .3s,border-color .3s,color .3s;
+}
+.sino button:hover{border-color:var(--paper)}
+.sino button[aria-pressed="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+/* selector de cantidad */
+.chips{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.chips button{
+  width:52px;height:52px;border-radius:50%;cursor:pointer;
+  background:transparent;color:var(--paper);
+  border:1px solid rgba(248,249,246,.35);
+  font-family:var(--display);font-size:1.15rem;
+  transition:background .3s,color .3s,border-color .3s;
+}
+.chips button:hover{border-color:var(--paper)}
+.chips button[aria-pressed="true"]{background:var(--sage-lt);color:var(--ink);border-color:var(--sage-lt)}
+/* campos de texto */
+.rsvp-form input[type="text"],.rsvp-form textarea{
+  width:100%;margin-bottom:.7rem;padding:.85rem 1rem;
+  background:rgba(248,249,246,.06);
+  border:1px solid rgba(248,249,246,.22);
+  color:var(--paper);
+  font-family:var(--body);font-weight:300;font-size:.95rem;
+  transition:border-color .3s,background .3s;
+}
+.rsvp-form input[type="text"]:focus,.rsvp-form textarea:focus{
+  outline:none;border-color:var(--sage-lt);background:rgba(248,249,246,.1);
+}
+.rsvp-form input::placeholder,.rsvp-form textarea::placeholder{color:#7C8896}
+.rsvp-form textarea{resize:vertical;min-height:84px}
+/* botón enviar */
+.btn-enviar{
+  margin-top:2rem;padding:1rem 2.6rem;cursor:pointer;
+  background:transparent;color:var(--paper);border:1px solid var(--paper);
+  font-family:var(--body);font-size:.72rem;font-weight:300;
+  letter-spacing:.3em;text-transform:uppercase;
+  transition:background .3s,color .3s;
+}
+.btn-enviar:hover:not(:disabled){background:var(--paper);color:var(--ink)}
+.btn-enviar:disabled{opacity:.45;cursor:default}
+.rsvp-msg{margin-top:1.2rem;font-size:.85rem;min-height:1.3rem;color:var(--sage-lt)}
+.rsvp-msg.error{color:#E8B4B4}
+/* pantalla de agradecimiento */
+.gracias{max-width:460px;margin:0 auto}
+.gracias .sello-ok{
+  width:64px;height:64px;border-radius:50%;margin:0 auto 1.6rem;
+  border:1px solid var(--sage-lt);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-size:1.5rem;color:var(--sage-lt);
+}
+.gracias h3{font-size:1.6rem;color:var(--paper);margin-bottom:.8rem}
+.link-editar{
+  display:inline-block;margin-top:1.6rem;cursor:pointer;background:none;border:none;
+  font-family:var(--body);font-size:.66rem;font-weight:300;
+  letter-spacing:.26em;text-transform:uppercase;color:var(--sage-lt);
+  border-bottom:1px solid rgba(192,207,178,.4);padding-bottom:.2rem;
+}
+
 /* ---------- FOOTER ---------- */
 footer{
   text-align:center;padding:3.5rem 1.6rem;
@@ -493,7 +570,7 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
         <span class="linea1">EL INICIO DE</span>
         <span class="linea2">Nuestro para siempre</span>
       </div>
-
+    
       <img class="env-seal-img" src="sello.png" alt="" onerror="this.remove()">
       <img class="env-botonier2"
            src="botonier2_esquina.png?v=3"
@@ -733,13 +810,57 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 </section>
 
 <!-- ==================== RSVP ==================== -->
-<section class="rsvp">
+<section class="rsvp" id="rsvp">
   <div class="inner reveal">
     <p class="eyebrow">Confirmación</p>
     <h2>¿Contamos contigo?</h2>
-    <p>Por favor confirma tu asistencia antes del <b>12 de noviembre</b>.  <!-- EDITAR: fecha límite -->
-       Al presionar el botón se abrirá WhatsApp con un mensaje listo para enviar a Steve.</p>
-    <a class="btn" id="btnWhatsApp" href="#" target="_blank" rel="noopener">Confirmar por WhatsApp</a>
+
+    <!-- 1) mientras carga -->
+    <p class="rsvp-estado" id="rsvpCargando">Cargando tu invitación…</p>
+
+    <!-- 2) sin código personalizado: confirmación general por WhatsApp -->
+    <div id="rsvpSinCodigo" hidden>
+      <p>Por favor confirma tu asistencia antes del <b>12 de noviembre</b>.
+         Escríbenos por WhatsApp y con gusto te ayudamos.</p>
+      <a class="btn" id="btnWhatsApp" href="#" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+    </div>
+
+    <!-- 3) formulario personalizado -->
+    <div class="rsvp-form" id="rsvpForm" hidden>
+      <p class="rsvp-lugares">
+        Hemos reservado <b id="rsvpPases">–</b> para <span id="rsvpNombre"></span>
+      </p>
+      <p class="rsvp-nota">
+        Con todo nuestro cariño, los lugares son personales y no pueden transferirse.
+      </p>
+
+      <p class="campo-lbl">¿Nos acompañas?</p>
+      <div class="sino">
+        <button type="button" id="btnSi" aria-pressed="false">Sí, ahí estaremos</button>
+        <button type="button" id="btnNo" aria-pressed="false">No podremos ir</button>
+      </div>
+
+      <div id="bloqueAsisten" hidden>
+        <p class="campo-lbl" id="lblCantidad">¿Cuántas personas asistirán?</p>
+        <div class="chips" id="chips"></div>
+        <div id="bloqueNombres"></div>
+      </div>
+
+      <label class="campo-lbl" for="rsvpComentarios">Un mensaje para nosotros (opcional)</label>
+      <textarea id="rsvpComentarios" maxlength="300"
+                placeholder="Alergias, restricciones de comida o unas palabras para los novios…"></textarea>
+
+      <button type="button" class="btn-enviar" id="btnEnviar" disabled>Enviar confirmación</button>
+      <p class="rsvp-msg" id="rsvpMsg"></p>
+    </div>
+
+    <!-- 4) agradecimiento -->
+    <div class="gracias" id="rsvpGracias" hidden>
+      <div class="sello-ok">&#10003;</div>
+      <h3 id="graciasTitulo">¡Gracias!</h3>
+      <p id="graciasTexto"></p>
+      <button type="button" class="link-editar" id="btnEditar">Modificar mi respuesta</button>
+    </div>
   </div>
 </section>
 
@@ -778,6 +899,10 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 const CONFIG = {
   // 12 de diciembre de 2026, 4:30 PM  (mes 11 = diciembre)
   fechaEvento: new Date(2026, 11, 12, 16, 30, 0),
+
+  // URL de la app web de Google Apps Script (la que termina en /exec).
+  // Mientras esté vacía, la confirmación se hace por WhatsApp como antes.
+  apiUrl: "",
 
   // WhatsApp de Steve (código de país + número, sin "+" ni espacios)
   whatsapp: "50241024231",
@@ -818,25 +943,8 @@ function tick(){
 }
 tick(); setInterval(tick,1000);
 
-// --- Invitación personalizada por link (?i=Nombre&p=pases) ---
+// --- Parámetros del link ---
 const qs = new URLSearchParams(location.search);
-const invitado = qs.get("i") || qs.get("invitado");
-const pases = qs.get("p") || qs.get("pases");
-let msgWA = CONFIG.mensajeWhatsApp;
-if(invitado){
-  document.getElementById("invitado").style.display = "";
-  document.getElementById("invNombre").textContent = invitado;
-  document.getElementById("invPases").textContent = pases
-    ? `${pases} ${pases === "1" ? "pase reservado" : "pases reservados"} a su nombre`
-    : "Con todo nuestro cariño";
-  msgWA = pases
-    ? `¡Hola Steve! Somos ${invitado} y confirmamos nuestra asistencia a su boda el 12 de diciembre con nuestros ${pases} pases. 🤍`
-    : `¡Hola Steve! ${invitado} confirma asistencia a su boda el 12 de diciembre. 🤍`;
-}
-
-// --- WhatsApp ---
-document.getElementById("btnWhatsApp").href =
-  `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msgWA)}`;
 
 // --- Mapa ---
 document.getElementById("mapaCeremonia").href = CONFIG.mapaCeremonia;
@@ -881,7 +989,6 @@ const carrete = document.getElementById("carrete");
       carrete.appendChild(cuadro);
     }
   }
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let pausa = false, timerReanudar = null;
   function pausar(ms){
     pausa = true;
@@ -967,7 +1074,201 @@ function abrirSobre(){
 sobre.addEventListener("click", abrirSobre);
 sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); abrirSobre(); } });
 
+/* ============================================================
+   RSVP — confirmación dentro de la misma página
+   El límite de pases lo valida el servidor, nunca el navegador.
+   ============================================================ */
+(function(){
+  const $ = id => document.getElementById(id);
+  const elCargando = $("rsvpCargando"), elSinCodigo = $("rsvpSinCodigo"),
+        elForm = $("rsvpForm"), elGracias = $("rsvpGracias"), elMsg = $("rsvpMsg");
+
+  const codigo = (qs.get("c") || qs.get("codigo") || "").trim();
+  let datos = null;      // {nombre, pases, estado, asisten, comentarios}
+  let asiste = null;     // true / false / null
+  let cantidad = 1;
+
+  /* --- llamada al servidor por JSONP (sin problemas de CORS) --- */
+  let contador = 0;
+  function api(params){
+    return new Promise((resolve, reject) => {
+      if(!CONFIG.apiUrl){ reject(new Error("sin_api")); return; }
+      const cb = "rsvpCb" + (++contador);
+      const s = document.createElement("script");
+      const limpiar = () => { delete window[cb]; s.remove(); clearTimeout(t); };
+      const t = setTimeout(() => { limpiar(); reject(new Error("timeout")); }, 15000);
+      window[cb] = data => { limpiar(); resolve(data); };
+      s.src = CONFIG.apiUrl + "?callback=" + cb + "&" +
+        Object.keys(params).map(k => k + "=" + encodeURIComponent(params[k])).join("&");
+      s.onerror = () => { limpiar(); reject(new Error("red")); };
+      document.body.appendChild(s);
+    });
+  }
+
+  function verPantalla(cual){
+    elCargando.hidden  = cual !== "cargando";
+    elSinCodigo.hidden = cual !== "sincodigo";
+    elForm.hidden      = cual !== "form";
+    elGracias.hidden   = cual !== "gracias";
+  }
+
+  /* --- selector de cantidad de personas --- */
+  function pintarChips(){
+    const cont = $("chips");
+    cont.innerHTML = "";
+    if(datos.pases <= 1){
+      cantidad = 1;
+      $("lblCantidad").textContent = "Tu lugar está reservado";
+      cont.hidden = true;
+    } else {
+      cont.hidden = false;
+      for(let i = 1; i <= datos.pases; i++){
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = i;
+        b.setAttribute("aria-pressed", i === cantidad ? "true" : "false");
+        b.addEventListener("click", () => {
+          cantidad = i;
+          [...cont.children].forEach((x, ix) =>
+            x.setAttribute("aria-pressed", ix + 1 === i ? "true" : "false"));
+          pintarNombres();
+        });
+        cont.appendChild(b);
+      }
+    }
+    pintarNombres();
+  }
+
+  /* --- campos para nombres de acompañantes --- */
+  function pintarNombres(){
+    const cont = $("bloqueNombres");
+    const previos = [...cont.querySelectorAll("input")].map(i => i.value);
+    cont.innerHTML = "";
+    if(cantidad <= 1) return;
+    const lbl = document.createElement("p");
+    lbl.className = "campo-lbl";
+    lbl.textContent = cantidad === 2 ? "Nombre de tu acompañante" : "Nombres de tus acompañantes";
+    cont.appendChild(lbl);
+    for(let i = 0; i < cantidad - 1; i++){
+      const inp = document.createElement("input");
+      inp.type = "text";
+      inp.maxLength = 60;
+      inp.placeholder = "Acompañante " + (i + 1);
+      inp.value = previos[i] || "";
+      cont.appendChild(inp);
+    }
+  }
+
+  function elegir(valor){
+    asiste = valor;
+    $("btnSi").setAttribute("aria-pressed", valor ? "true" : "false");
+    $("btnNo").setAttribute("aria-pressed", valor ? "false" : "true");
+    $("bloqueAsisten").hidden = !valor;
+    $("btnEnviar").disabled = false;
+    elMsg.textContent = "";
+    elMsg.classList.remove("error");
+  }
+
+  function mostrarGracias(asistio, n){
+    $("graciasTitulo").textContent = asistio
+      ? "¡Nos vemos el 12 de diciembre!"
+      : "Gracias por avisarnos";
+    $("graciasTexto").textContent = asistio
+      ? (n === 1
+          ? "Tu lugar quedó confirmado. Será una alegría tenerte con nosotros."
+          : "Quedaron confirmados " + n + " lugares a tu nombre. Será una alegría tenerlos con nosotros.")
+      : "Lamentamos que no puedas acompañarnos, pero te tendremos presente ese día.";
+    verPantalla("gracias");
+  }
+
+  /* --- carga inicial --- */
+  function iniciar(){
+    if(!codigo || !CONFIG.apiUrl){
+      $("btnWhatsApp").href = "https://wa.me/" + CONFIG.whatsapp +
+        "?text=" + encodeURIComponent(CONFIG.mensajeWhatsApp);
+      verPantalla("sincodigo");
+      return;
+    }
+    api({ accion: "buscar", codigo: codigo }).then(r => {
+      if(!r || !r.ok){
+        elCargando.textContent = "No pudimos reconocer tu invitación. Escríbenos y lo resolvemos.";
+        return;
+      }
+      datos = r;
+      cantidad = Math.min(Math.max(r.asisten || r.pases, 1), r.pases);
+
+      const secInv = $("invitado");
+      if(secInv){
+        secInv.style.display = "";
+        $("invNombre").textContent = r.nombre;
+        $("invPases").textContent = r.pases === 1
+          ? "1 pase reservado a su nombre"
+          : r.pases + " pases reservados a su nombre";
+      }
+
+      $("rsvpNombre").textContent = r.nombre;
+      $("rsvpPases").textContent = r.pases === 1 ? "1 lugar" : r.pases + " lugares";
+      $("rsvpComentarios").value = r.comentarios || "";
+
+      if(r.estado === "Confirmado" || r.estado === "No asiste"){
+        mostrarGracias(r.estado === "Confirmado", r.asisten);
+      } else {
+        pintarChips();
+        verPantalla("form");
+      }
+    }).catch(() => {
+      elCargando.textContent = "No pudimos cargar tu invitación. Revisa tu conexión e inténtalo de nuevo.";
+    });
+  }
+
+  /* --- envío --- */
+  function enviar(){
+    if(asiste === null) return;
+    const btn = $("btnEnviar");
+    btn.disabled = true;
+    elMsg.classList.remove("error");
+    elMsg.textContent = "Enviando…";
+
+    const nombres = [...$("bloqueNombres").querySelectorAll("input")]
+      .map(i => i.value.trim()).filter(Boolean).join("|");
+
+    api({
+      accion: "guardar",
+      codigo: codigo,
+      asiste: asiste ? "si" : "no",
+      cantidad: asiste ? cantidad : 0,
+      nombres: nombres,
+      comentarios: $("rsvpComentarios").value.trim()
+    }).then(r => {
+      if(r && r.ok){
+        if(datos) datos.estado = r.asiste ? "Confirmado" : "No asiste";
+        mostrarGracias(r.asiste, r.cantidad);
+      } else {
+        elMsg.classList.add("error");
+        elMsg.textContent = "No se pudo guardar. Inténtalo de nuevo en un momento.";
+        btn.disabled = false;
+      }
+    }).catch(() => {
+      elMsg.classList.add("error");
+      elMsg.textContent = "No se pudo guardar. Revisa tu conexión e inténtalo de nuevo.";
+      btn.disabled = false;
+    });
+  }
+
+  $("btnSi").addEventListener("click", () => elegir(true));
+  $("btnNo").addEventListener("click", () => elegir(false));
+  $("btnEnviar").addEventListener("click", enviar);
+  $("btnEditar").addEventListener("click", () => {
+    elegir(!(datos && datos.estado === "No asiste"));
+    if(datos) pintarChips();
+    verPantalla("form");
+  });
+
+  iniciar();
+})();
+
 // --- Animaciones al hacer scroll ---
+
 const io = new IntersectionObserver(es => es.forEach(e => {
   if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
 }), { threshold:.15 });
