@@ -712,7 +712,7 @@ body.locked{overflow:hidden}
 .hoy-acciones .btn{margin-top:0}
 
 /* ---------- SILUETA DE LOS VOLCANES ---------- */
-.volcanes{display:block;width:min(420px,82%);margin:0 auto 2.2rem;color:var(--sage)}
+.volcanes{display:block;width:min(300px,68%);margin:0 auto 2rem;color:var(--sage)}
 .volcanes path{vector-effect:non-scaling-stroke}
 
 /* ---------- FOOTER ---------- */
@@ -1131,15 +1131,24 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 
 
 <footer>
-  <!-- El perfil del Volcán de Agua y el de Fuego, como se ven desde La Antigua -->
-  <svg class="volcanes" viewBox="0 0 320 72" fill="none" aria-hidden="true">
-    <path d="M0 66 C 20 64 42 60 60 52 L 92 20 C 95 17 99 17 102 20 L 134 54
-             C 146 62 152 65 160 66 C 172 64 184 59 194 51 L 212 33
-             C 215 30 219 30 222 33 L 240 53 C 250 62 258 65 268 66
-             C 286 65 304 63 320 62"
-          stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
-    <path d="M217 31 C 215 26 219 23 221 18 C 223 14 221 11 219 8"
-          stroke="var(--seaglass)" stroke-width=".8" stroke-linecap="round"/>
+  <!-- El Arco de Santa Catalina con el Volcán de Agua detrás: la postal de La Antigua -->
+  <svg class="volcanes" viewBox="0 0 320 126" fill="none" aria-hidden="true">
+    <path d="M0 110 C 26 108 56 104 86 94 L 152 70 C 156 66 164 66 168 70 L 234 94
+             C 264 104 294 108 320 110"
+          stroke="var(--seaglass)" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+    <g fill="var(--paper)" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M104 66 H216 V124 H192 V96 A32 32 0 0 0 128 96 V124 H104 Z"/>
+      <path d="M99 58 H221 V66 H99 Z"/>
+      <path d="M137 30 H183 V58 H137 Z"/>
+      <path d="M131 30 C 136 16 147 8 160 8 C 173 8 184 16 189 30 Z"/>
+    </g>
+    <g stroke="currentColor" stroke-width="1.1" fill="none" stroke-linecap="round">
+      <circle cx="160" cy="44" r="8.5"/>
+      <path d="M160 44 V38.5 M160 44 L164 46.5" stroke-width=".9"/>
+      <path d="M160 8 V2" stroke-width=".9"/>
+    </g>
+    <circle cx="160" cy="1.6" r="1.6" fill="var(--paper)" stroke="currentColor" stroke-width=".9"/>
+    <path d="M74 124 H246" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity=".45"/>
   </svg>
   <img src="logo.png" alt="" onerror="this.remove()" style="width:58px;display:block;margin:0 auto .9rem;opacity:.9">
   12 · 12 · 2026 · La Antigua Guatemala
