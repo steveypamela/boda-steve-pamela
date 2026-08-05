@@ -721,9 +721,10 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   </div>
 
   <div class="btn-doble reveal">
-    <!-- boda.ics funciona en iPhone, Android y computadora -->
-    <a class="btn" href="boda.ics" style="margin-top:0">Agregar al calendario</a>
-    <a class="btn-sec" id="btnGoogleCal" href="#" target="_blank" rel="noopener">O agregar a Google Calendar</a>
+    <!-- El botón se adapta al dispositivo: en iPhone/Mac usa el calendario del
+         sistema (boda.ics) y en lo demás abre Google Calendar sin descargar nada. -->
+    <a class="btn" id="btnCalendario" href="boda.ics" style="margin-top:0">Agregar al calendario</a>
+    <a class="btn-sec" id="btnCalAlterno" href="boda.ics">Usar otro calendario</a>
   </div>
 
   <div class="mapa reveal">
@@ -739,55 +740,22 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   <p class="eyebrow reveal">Cómo llegar</p>
   <h2 class="reveal">Dónde parquear</h2>
   <p class="hoteles-intro reveal">
-    San José el Viejo está sobre la 5a Avenida Sur. En La Antigua el parqueo
-    en calle es limitado, así que te dejamos las opciones más cercanas.
+    San José el Viejo está sobre la 5a Avenida Sur. Como el parqueo en calle
+    es limitado, te dejamos la opción más cercana y cómoda.
   </p>
 
   <div class="reveal">
     <div class="hotel">
       <div>
         <div class="nombre">Parqueo La Estación</div>
-        <div class="dist">9a Calle Poniente · 3 min a pie · abierto 24 horas</div>
+        <div class="dist">9a Calle Poniente · a 3 min a pie · abierto las 24 horas</div>
       </div>
       <div class="acciones">
         <a class="tel" href="tel:+50252129610">+502 5212 9610</a>
         <a href="https://maps.google.com/?q=Parqueo+La+Estacion+de+Antigua" target="_blank" rel="noopener">Cómo llegar</a>
       </div>
     </div>
-    <div class="hotel">
-      <div>
-        <div class="nombre">Ermita Parqueo Luna</div>
-        <div class="dist">Calzada Santa Lucía Sur · 5 min a pie · cierra a las 8 pm</div>
-      </div>
-      <div class="acciones">
-        <a href="https://maps.google.com/?q=Ermita+Parqueo+Luna+Antigua+Guatemala" target="_blank" rel="noopener">Cómo llegar</a>
-      </div>
-    </div>
-    <div class="hotel">
-      <div>
-        <div class="nombre">Parqueo Los Proverbios</div>
-        <div class="dist">Calzada Santa Lucía Sur · 6 min a pie · cierra a las 8 pm</div>
-      </div>
-      <div class="acciones">
-        <a class="tel" href="tel:+50236066586">+502 3606 6586</a>
-        <a href="https://maps.google.com/?q=Parqueo+los+proverbios+Antigua+Guatemala" target="_blank" rel="noopener">Cómo llegar</a>
-      </div>
-    </div>
   </div>
-
-  <div class="aviso reveal">
-    Si vas a quedarte hasta el final de la fiesta, te recomendamos
-    <b>La Estación</b>: es el único de los tres que permanece abierto toda la noche.
-  </div>
-
-  <ul class="tips reveal">
-    <li>Las calles de La Antigua son de piedra: para ellas, tacón ancho o de bloque
-        se camina mucho mejor que el tacón fino.</li>
-    <li>Llega con 20 o 30 minutos de anticipación: el tránsito del centro se
-        complica los sábados por la tarde.</li>
-    <li>Si prefieres no manejar, los tuk tuks y taxis dentro del casco son
-        abundantes y económicos, y varios hoteles están a pocas cuadras.</li>
-  </ul>
   <div class="thread" style="margin-top:4rem"></div>
 </section>
 
@@ -1137,10 +1105,15 @@ if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
   });
 }
 
-// --- Agregar al calendario (Google Calendar como alternativa) ---
+// --- Agregar al calendario ---
+// iPhone, iPad y Mac abren el archivo .ics directo en su app Calendario.
+// En Android y computadoras con Windows se abre Google Calendar, así nadie
+// tiene que descargar un archivo.
 (function(){
-  const b = document.getElementById("btnGoogleCal");
-  if(!b) return;
+  const btn = document.getElementById("btnCalendario");
+  const alt = document.getElementById("btnCalAlterno");
+  if(!btn) return;
+
   const p = new URLSearchParams({
     action: "TEMPLATE",
     text: "Boda de Steve & Pamela",
@@ -1149,7 +1122,18 @@ if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
              "Invitación: " + location.origin + location.pathname,
     location: "San José el Viejo, 5a Avenida Sur, La Antigua Guatemala"
   });
-  b.href = "https://calendar.google.com/calendar/render?" + p.toString();
+  const urlGoogle = "https://calendar.google.com/calendar/render?" + p.toString();
+
+  const esApple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
+  if(esApple){
+    btn.href = "boda.ics";
+    alt.href = urlGoogle; alt.target = "_blank"; alt.rel = "noopener";
+    alt.textContent = "O usar Google Calendar";
+  } else {
+    btn.href = urlGoogle; btn.target = "_blank"; btn.rel = "noopener";
+    alt.href = "boda.ics";
+    alt.textContent = "O descargar para Apple u Outlook";
+  }
 })();
 
 // --- Clima: promedios de diciembre y, cerca de la fecha, pronóstico real ---
