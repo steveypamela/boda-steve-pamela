@@ -177,13 +177,17 @@ body.locked{overflow:hidden}
   border:1px solid #D9D5C9;
   padding:.85rem .7rem .9rem;
   box-shadow:0 8px 18px rgba(16,26,40,.34);
-  transform:rotate(-2.5deg) translateY(10px);
+  transform:rotate(-2.5deg) translateY(12px);
   opacity:0;
-  transition:opacity .9s ease .55s, transform .9s cubic-bezier(.22,.8,.3,1) .55s;
 }
 .env-para.visible{
-  opacity:1;transform:rotate(-2.5deg) translateY(0);
-  animation:flotarTarjeta 7.2s ease-in-out 1.5s infinite;
+  /* aparece 0.5 s después del ramo y luego pasa a flotar con su propio ritmo */
+  animation:aparecerTarjeta 1.2s cubic-bezier(.22,.8,.3,1) .85s both,
+            flotarTarjeta 7.2s ease-in-out 2.3s infinite;
+}
+@keyframes aparecerTarjeta{
+  from{opacity:0;transform:rotate(-4.5deg) translateY(14px)}
+  to  {opacity:1;transform:rotate(-2.5deg) translateY(0)}
 }
 @keyframes flotarTarjeta{
   0%,100%{transform:rotate(-2.5deg) translateY(0)}
