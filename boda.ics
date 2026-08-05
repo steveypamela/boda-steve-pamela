@@ -1,0 +1,32 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Steve y Pamela//Boda 12-12-2026//ES
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:boda-steve-pamela-20261212@steveypamela.github.io
+DTSTAMP:20260805T120000Z
+DTSTART:20261212T223000Z
+DTEND:20261213T050000Z
+SUMMARY:Boda de Steve & Pamela
+DESCRIPTION:Ceremonia a las 4:30 PM en San José el Viejo\, La Antigua Guatemala.\n\nCódigo de vestimenta: formal - etiqueta.\n\nInvitación: https://steveypamela.github.io/boda-steve-pamela/
+LOCATION:San José el Viejo\, 5a Avenida Sur\, La Antigua Guatemala
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+BEGIN:VALARM
+TRIGGER:-P7D
+ACTION:DISPLAY
+DESCRIPTION:En una semana es la boda de Steve y Pamela
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:Mañana es la boda de Steve y Pamela
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-PT3H
+ACTION:DISPLAY
+DESCRIPTION:Hoy a las 4:30 PM: boda de Steve y Pamela
+END:VALARM
+END:VEVENT
+END:VCALENDAR

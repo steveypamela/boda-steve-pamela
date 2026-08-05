@@ -398,6 +398,30 @@ body.locked{overflow:hidden}
 }
 
 
+
+/* ---------- BOTONES SECUNDARIOS Y CÓMO LLEGAR ---------- */
+.btn-doble{display:flex;flex-direction:column;align-items:center;gap:.9rem;margin-top:2.4rem}
+.btn-sec{
+  font-size:.64rem;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--dusty);text-decoration:none;
+  border-bottom:1px solid rgba(93,123,159,.35);padding-bottom:.2rem;
+}
+.btn-sec:hover{border-bottom-color:var(--dusty)}
+.tips{
+  list-style:none;text-align:left;max-width:460px;margin:2rem auto 0;
+  font-size:.92rem;color:var(--stone);
+}
+.tips li{position:relative;padding-left:1.5rem;margin-bottom:.9rem;line-height:1.7}
+.tips li::before{
+  content:"";position:absolute;left:0;top:.75rem;
+  width:7px;height:1px;background:var(--sage);
+}
+.aviso{
+  border-left:2px solid var(--sage);
+  background:#fff;padding:1.1rem 1.3rem;margin:2rem auto 0;max-width:460px;
+  text-align:left;font-size:.88rem;color:var(--stone);line-height:1.7;
+}
+
 /* ---------- CLIMA ---------- */
 .clima-card{border:1px solid var(--hairline);background:#fff;padding:2.6rem 1.6rem 2.2rem}
 .clima-sol{display:block;margin:0 auto 1.8rem;color:var(--dusty)}
@@ -649,12 +673,21 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 <!-- ==================== MENSAJE ==================== -->
 <section class="reveal">
   <p class="eyebrow">Con la bendición de Dios y nuestras familias</p>
-  <h2>Queremos compartir contigo el inicio de nuestra historia</h2>
-  <p style="max-width:460px;margin:0 auto;color:var(--stone)">
-    <!-- EDITAR: mensaje personal de Steve y Pamela -->
-    Después de tantos momentos juntos, llegó el día de dar el paso más
-    importante. Nada nos haría más felices que celebrarlo contigo entre
-    las calles y ruinas de La Antigua Guatemala.
+  <h2>Cada historia merece ser contada</h2>
+  <p style="max-width:470px;margin:0 auto;color:var(--stone)">
+    Entre recuerdos, encuentros y sueños compartidos llegamos a este momento,
+    el capítulo que nos lleva al gran día. Y queremos vivirlo junto a quienes
+    forman parte de nuestra vida.
+  </p>
+  <p style="max-width:470px;margin:1.4rem auto 0;color:var(--stone)">
+    Este no será solo un día para celebrar nuestro amor, sino también para reunir
+    a las personas que han sido parte de nuestra historia. La fecha está marcada
+    y La Antigua espera convertirse en escenario de encuentros, abrazos y memorias
+    que llevaremos todos en el corazón.
+  </p>
+  <p style="max-width:430px;margin:2rem auto 0;font-family:var(--display);
+            font-style:italic;font-size:1.1rem;color:var(--ink)">
+    Más que anunciar, queremos agradecer y celebrar la esencia de estar juntos.
   </p>
   <div class="thread" style="margin-top:4rem"></div>
 </section>
@@ -687,11 +720,74 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
     <p>En el mismo lugar<br>San José el Viejo</p>
   </div>
 
+  <div class="btn-doble reveal">
+    <!-- boda.ics funciona en iPhone, Android y computadora -->
+    <a class="btn" href="boda.ics" style="margin-top:0">Agregar al calendario</a>
+    <a class="btn-sec" id="btnGoogleCal" href="#" target="_blank" rel="noopener">O agregar a Google Calendar</a>
+  </div>
+
   <div class="mapa reveal">
     <iframe
       src="https://www.google.com/maps?q=Iglesia+San+Jose+El+Viejo+Antigua+Guatemala&output=embed"
       loading="lazy" title="Mapa de San José el Viejo" referrerpolicy="no-referrer-when-downgrade"></iframe>
   </div>
+  <div class="thread" style="margin-top:4rem"></div>
+</section>
+
+<!-- ==================== CÓMO LLEGAR ==================== -->
+<section id="llegar">
+  <p class="eyebrow reveal">Cómo llegar</p>
+  <h2 class="reveal">Dónde parquear</h2>
+  <p class="hoteles-intro reveal">
+    San José el Viejo está sobre la 5a Avenida Sur. En La Antigua el parqueo
+    en calle es limitado, así que te dejamos las opciones más cercanas.
+  </p>
+
+  <div class="reveal">
+    <div class="hotel">
+      <div>
+        <div class="nombre">Parqueo La Estación</div>
+        <div class="dist">9a Calle Poniente · 3 min a pie · abierto 24 horas</div>
+      </div>
+      <div class="acciones">
+        <a class="tel" href="tel:+50252129610">+502 5212 9610</a>
+        <a href="https://maps.google.com/?q=Parqueo+La+Estacion+de+Antigua" target="_blank" rel="noopener">Cómo llegar</a>
+      </div>
+    </div>
+    <div class="hotel">
+      <div>
+        <div class="nombre">Ermita Parqueo Luna</div>
+        <div class="dist">Calzada Santa Lucía Sur · 5 min a pie · cierra a las 8 pm</div>
+      </div>
+      <div class="acciones">
+        <a href="https://maps.google.com/?q=Ermita+Parqueo+Luna+Antigua+Guatemala" target="_blank" rel="noopener">Cómo llegar</a>
+      </div>
+    </div>
+    <div class="hotel">
+      <div>
+        <div class="nombre">Parqueo Los Proverbios</div>
+        <div class="dist">Calzada Santa Lucía Sur · 6 min a pie · cierra a las 8 pm</div>
+      </div>
+      <div class="acciones">
+        <a class="tel" href="tel:+50236066586">+502 3606 6586</a>
+        <a href="https://maps.google.com/?q=Parqueo+los+proverbios+Antigua+Guatemala" target="_blank" rel="noopener">Cómo llegar</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="aviso reveal">
+    Si vas a quedarte hasta el final de la fiesta, te recomendamos
+    <b>La Estación</b>: es el único de los tres que permanece abierto toda la noche.
+  </div>
+
+  <ul class="tips reveal">
+    <li>Las calles de La Antigua son de piedra: para ellas, tacón ancho o de bloque
+        se camina mucho mejor que el tacón fino.</li>
+    <li>Llega con 20 o 30 minutos de anticipación: el tránsito del centro se
+        complica los sábados por la tarde.</li>
+    <li>Si prefieres no manejar, los tuk tuks y taxis dentro del casco son
+        abundantes y económicos, y varios hoteles están a pocas cuadras.</li>
+  </ul>
   <div class="thread" style="margin-top:4rem"></div>
 </section>
 
@@ -898,7 +994,7 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 
     <!-- 2) sin código personalizado: confirmación general por WhatsApp -->
     <div id="rsvpSinCodigo" hidden>
-      <p>Por favor confirma tu asistencia antes del <b>12 de noviembre</b>.
+      <p>Por favor confirma tu asistencia antes del <b>25 de noviembre</b>.
          Escríbenos por WhatsApp y con gusto te ayudamos.</p>
       <a class="btn" id="btnWhatsApp" href="#" target="_blank" rel="noopener">Escribir por WhatsApp</a>
     </div>
@@ -1040,6 +1136,21 @@ if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
     colorDark: "#2F4156", colorLight: "#ffffff"
   });
 }
+
+// --- Agregar al calendario (Google Calendar como alternativa) ---
+(function(){
+  const b = document.getElementById("btnGoogleCal");
+  if(!b) return;
+  const p = new URLSearchParams({
+    action: "TEMPLATE",
+    text: "Boda de Steve & Pamela",
+    dates: "20261212T223000Z/20261213T050000Z",
+    details: "Ceremonia a las 4:30 PM. Código de vestimenta: formal - etiqueta.\n" +
+             "Invitación: " + location.origin + location.pathname,
+    location: "San José el Viejo, 5a Avenida Sur, La Antigua Guatemala"
+  });
+  b.href = "https://calendar.google.com/calendar/render?" + p.toString();
+})();
 
 // --- Clima: promedios de diciembre y, cerca de la fecha, pronóstico real ---
 (function(){
