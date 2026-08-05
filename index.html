@@ -139,14 +139,17 @@ body.locked{overflow:hidden}
 .sobre-wrap{text-align:center;padding:1rem}
 .env{position:relative;width:min(88vw,430px);margin:0 auto;animation:flotar 5.5s ease-in-out infinite}
 #sobre.open .env{animation:none}
-@keyframes flotar{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes flotar{
+  0%,100%{transform:translate3d(var(--dx,0px),0,0)}
+  50%{transform:translate3d(var(--dx,0px),-8px,0)}
+}
 .env-fondo{width:100%;display:block;position:relative;z-index:1;filter:drop-shadow(0 26px 46px rgba(31,45,62,.32))}
 /* apertura cinematográfica: el sello se rompe y el sobre hace zoom
    hacia la cámara desenfocándose, fundiendo hacia la invitación */
 .env-img{width:100%;display:block;filter:drop-shadow(0 26px 46px rgba(31,45,62,.32))}
 .env-seal-img{
   position:absolute;left:50%;top:56.5%;width:21%;
-  transform:translate(-50%,-50%);
+  transform:translate(-50%,-50%) translate3d(var(--dx,0px),var(--dy,0px),0);
   filter:drop-shadow(0 5px 10px rgba(31,45,62,.35));
   transition:opacity .5s ease,transform .5s ease;
 }
@@ -192,8 +195,8 @@ body.locked{overflow:hidden}
   to  {opacity:1;transform:rotate(-2.5deg) translateY(0)}
 }
 @keyframes flotarTarjeta{
-  0%,100%{transform:rotate(-2.5deg) translateY(0)}
-  50%{transform:rotate(-3.4deg) translateY(7px)}
+  0%,100%{transform:translate3d(var(--dx,0px),var(--dy,0px),0) rotate(-2.5deg)}
+  50%{transform:translate3d(var(--dx,0px),calc(var(--dy,0px) + 7px),0) rotate(-3.4deg)}
 }
 .env-para::before{
   content:"";position:absolute;inset:4px;
@@ -234,8 +237,8 @@ body.locked{overflow:hidden}
             flotarRamo 6.4s ease-in-out 1.2s infinite;
 }
 @keyframes flotarRamo{
-  0%,100%{transform:translateY(0) rotate(0deg)}
-  50%{transform:translateY(-7px) rotate(.9deg)}
+  0%,100%{transform:translate3d(var(--dx,0px),var(--dy,0px),0) rotate(0deg)}
+  50%{transform:translate3d(var(--dx,0px),calc(var(--dy,0px) - 7px),0) rotate(.9deg)}
 }
 @keyframes brotar{from{opacity:0}to{opacity:1}}
 @keyframes mecer{0%,100%{rotate:0deg}50%{rotate:.4deg}}
@@ -696,6 +699,34 @@ body.locked{overflow:hidden}
 
 
 
+
+/* ---------- MESA Y PASE DEL DÍA ---------- */
+.inv-mesa{
+  margin-top:1.4rem;padding-top:1.2rem;
+  border-top:1px solid var(--hairline);
+}
+.inv-mesa .lbl{font-size:.6rem;letter-spacing:.34em;text-transform:uppercase;color:var(--stone)}
+.inv-mesa .num{
+  display:block;font-family:var(--display);font-size:2rem;
+  color:var(--dusty);line-height:1.2;margin-top:.2rem;
+}
+.inv-pase{margin-top:1.6rem}
+.inv-pase .qr-marco{margin-top:.8rem;padding:.8rem}
+.inv-pase #qrPase{width:132px;height:132px}
+.inv-pase #qrPase img,.inv-pase #qrPase canvas{width:132px !important;height:132px !important;display:block}
+.inv-pase .lbl{font-size:.6rem;letter-spacing:.34em;text-transform:uppercase;color:var(--stone)}
+
+/* ---------- EL NOMBRE SE ESCRIBE SOLO ---------- */
+.env-para .para-nombre{
+  -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 var(--tinta,0%),
+                      rgba(0,0,0,.25) calc(var(--tinta,0%) + 4%),transparent calc(var(--tinta,0%) + 9%));
+  mask-image:linear-gradient(90deg,#000 0%,#000 var(--tinta,0%),
+              rgba(0,0,0,.25) calc(var(--tinta,0%) + 4%),transparent calc(var(--tinta,0%) + 9%));
+  animation:escribir 1.7s cubic-bezier(.5,.05,.35,1) 1.15s forwards;
+}
+@keyframes escribir{ from{--tinta:0%} to{--tinta:104%} }
+@property --tinta{ syntax:"<percentage>"; inherits:false; initial-value:0%; }
+
 /* ---------- MODO DÍA DEL EVENTO / DESPUÉS ---------- */
 .hoy-card{
   border:1px solid var(--hairline);background:#fff;
@@ -823,6 +854,16 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
     <div class="invitado-nombre" id="invNombre"></div>
     <div class="env-div" style="margin:.9rem auto"></div>
     <p class="invitado-pases" id="invPases"></p>
+
+    <!-- Mesa asignada y pase de entrada: solo aparecen el día de la boda -->
+    <div class="inv-mesa" id="invMesa" hidden>
+      <span class="lbl">Su mesa</span>
+      <span class="num" id="invMesaNum"></span>
+    </div>
+    <div class="inv-pase" id="invPase" hidden>
+      <span class="lbl">Tu pase de entrada</span>
+      <div class="qr-marco"><div id="qrPase"></div></div>
+    </div>
   </div>
 </section>
 
@@ -1259,6 +1300,47 @@ if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
   });
 }
 
+// --- Profundidad: las capas del sobre reaccionan al movimiento ---
+(function(){
+  const env = document.querySelector(".env");
+  if(!env || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const capas = [
+    { el: env,                                   f: 4  },   // el sobre, al fondo
+    { el: document.querySelector(".env-seal-img"), f: 7  },  // el sello
+    { el: document.querySelector(".env-para"),     f: 12 },  // la tarjetita
+    { el: document.querySelector(".env-botonier2"), f: 17 }  // el ramo, al frente
+  ].filter(c => c.el);
+
+  let x = 0, y = 0, px = 0, py = 0, animando = false;
+  function suavizar(){
+    px += (x - px) * .08;
+    py += (y - py) * .08;
+    capas.forEach(c => {
+      c.el.style.setProperty("--dx", (px * c.f).toFixed(2) + "px");
+      c.el.style.setProperty("--dy", (py * c.f).toFixed(2) + "px");
+    });
+    if(Math.abs(x - px) > .001 || Math.abs(y - py) > .001) requestAnimationFrame(suavizar);
+    else animando = false;
+  }
+  function mover(nx, ny){
+    x = Math.max(-1, Math.min(1, nx));
+    y = Math.max(-1, Math.min(1, ny));
+    if(!animando){ animando = true; requestAnimationFrame(suavizar); }
+  }
+
+  // computadora: el cursor
+  window.addEventListener("mousemove", e => {
+    mover((e.clientX / innerWidth - .5) * 2, (e.clientY / innerHeight - .5) * 2);
+  });
+
+  // celular: el giroscopio (Android; en iPhone el sistema no lo permite sin permiso)
+  window.addEventListener("deviceorientation", e => {
+    if(e.gamma === null || e.beta === null) return;
+    mover(e.gamma / 30, (e.beta - 45) / 30);
+  });
+})();
+
 // --- La invitación cambia según el día: antes, el día de la boda, y después ---
 (function(){
   const F = CONFIG.fechaEvento;
@@ -1274,6 +1356,7 @@ if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
     : faltanDias > 0 ? "Faltan " + faltanDias + (faltanDias === 1 ? " día" : " días") + " · Steve & Pamela"
     : "Steve & Pamela · 12.12.2026";
 
+  window.esDiaDeLaBoda = mismoDia;
   if(faltanDias > 0) return;   // antes de la boda todo queda igual
 
   const sec = s => document.getElementById(s);
@@ -1576,7 +1659,7 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
   }
 
   // pinta la tarjeta superior con el nombre del invitado
-  function pintarTarjeta(nombre, pases){
+  function pintarTarjeta(nombre, pases, mesa){
     pintarSobre(nombre);
     const secInv = $("invitado");
     if(!secInv || !nombre) return;
@@ -1585,6 +1668,21 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
     $("invPases").textContent = !pases ? "Con todo nuestro cariño"
       : (pases === 1 ? "1 pase reservado a su nombre"
                      : pases + " pases reservados a su nombre");
+
+    // El día de la boda la invitación se convierte en su pase de entrada
+    if(window.esDiaDeLaBoda){
+      if(mesa){
+        $("invMesa").hidden = false;
+        $("invMesaNum").textContent = /^\d+$/.test(String(mesa).trim())
+          ? "Mesa " + String(mesa).trim() : String(mesa).trim();
+      }
+      const cajaQR = $("qrPase");
+      if(codigo && cajaQR && !cajaQR.hasChildNodes() && typeof QRCode !== "undefined"){
+        $("invPase").hidden = false;
+        new QRCode(cajaQR, { text: codigo, width: 132, height: 132,
+                             colorDark: "#2F4156", colorLight: "#ffffff" });
+      }
+    }
   }
 
   function prepararFormulario(){
@@ -1713,7 +1811,7 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
       }
       const yaEligio = asiste !== null;
       datos = r;
-      pintarTarjeta(r.nombre, r.pases);
+      pintarTarjeta(r.nombre, r.pases, r.mesa);
       if(!yaEligio) cantidad = Math.min(Math.max(r.asisten || r.pases, 1), r.pases);
       if(!$("rsvpComentarios").value) $("rsvpComentarios").value = r.comentarios || "";
 
