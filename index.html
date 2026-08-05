@@ -1228,6 +1228,12 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
     return /^[A-Za-z0-9]{6}$/.test(ultimo) ? ultimo : "";
   }
   const codigo = leerCodigo();
+
+  // Respaldo inmediato: si el link trae el nombre (&n=) y los pases (&p=),
+  // la tarjeta y el formulario se pintan al instante, sin esperar a Google.
+  // El servidor sigue mandando: al guardar, el límite real es el de la hoja.
+  const nombreLink = (qs.get("n") || "").trim();
+  const pasesLink  = parseInt(qs.get("p"), 10);
   let datos = null;      // {nombre, pases, estado, asisten, comentarios}
   let asiste = null;     // true / false / null
   let cantidad = 1;
@@ -1240,13 +1246,31 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
       const cb = "rsvpCb" + (++contador);
       const s = document.createElement("script");
       const limpiar = () => { delete window[cb]; s.remove(); clearTimeout(t); };
-      const t = setTimeout(() => { limpiar(); reject(new Error("timeout")); }, 25000);
+      const t = setTimeout(() => { limpiar(); reject(new Error("timeout")); }, 8000);
       window[cb] = data => { limpiar(); resolve(data); };
       s.src = CONFIG.apiUrl + "?callback=" + cb + "&" +
         Object.keys(params).map(k => k + "=" + encodeURIComponent(params[k])).join("&");
       s.onerror = () => { limpiar(); reject(new Error("red")); };
       document.body.appendChild(s);
     });
+  }
+
+  // pinta la tarjeta superior con el nombre del invitado
+  function pintarTarjeta(nombre, pases){
+    const secInv = $("invitado");
+    if(!secInv || !nombre) return;
+    secInv.style.display = "";
+    $("invNombre").textContent = nombre;
+    $("invPases").textContent = !pases ? "Con todo nuestro cariño"
+      : (pases === 1 ? "1 pase reservado a su nombre"
+                     : pases + " pases reservados a su nombre");
+  }
+
+  function prepararFormulario(){
+    $("rsvpNombre").textContent = datos.nombre;
+    $("rsvpPases").textContent = datos.pases === 1 ? "1 lugar" : datos.pases + " lugares";
+    cantidad = Math.min(Math.max(cantidad, 1), datos.pases);
+    pintarChips();
   }
 
   function verPantalla(cual){
@@ -1330,6 +1354,19 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
 
   /* --- carga inicial --- */
   function iniciar(){
+    // 1) Lo que venga en el link se muestra de inmediato
+    if(nombreLink){
+      pintarTarjeta(nombreLink, pasesLink);
+      if(!datos && pasesLink > 0){
+        datos = { nombre: nombreLink, pases: pasesLink,
+                  estado: "Pendiente", asisten: 0,
+                  comentarios: "", pedirNombres: false };
+        cantidad = pasesLink;
+        prepararFormulario();
+        verPantalla("form");
+      }
+    }
+
     if(!codigo || !CONFIG.apiUrl){
       $("btnWhatsApp").href = "https://wa.me/" + CONFIG.whatsapp +
         "?text=" + encodeURIComponent(CONFIG.mensajeWhatsApp);
@@ -1340,9 +1377,9 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
     // tardar. Reintentamos automáticamente antes de dar error.
     function buscarConReintentos(intento){
       return api({ accion: "buscar", codigo: codigo }).catch(err => {
-        if(intento < 3){
+        if(intento < 4){
           elCargando.textContent = "Preparando tu invitación…";
-          return new Promise(res => setTimeout(res, 1500)).then(() => buscarConReintentos(intento + 1));
+          return new Promise(res => setTimeout(res, 1200)).then(() => buscarConReintentos(intento + 1));
         }
         throw err;
       });
@@ -1353,29 +1390,20 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
         elCargando.textContent = "No pudimos reconocer tu invitación. Escríbenos y lo resolvemos.";
         return;
       }
+      const yaEligio = asiste !== null;
       datos = r;
-      cantidad = Math.min(Math.max(r.asisten || r.pases, 1), r.pases);
-
-      const secInv = $("invitado");
-      if(secInv){
-        secInv.style.display = "";
-        $("invNombre").textContent = r.nombre;
-        $("invPases").textContent = r.pases === 1
-          ? "1 pase reservado a su nombre"
-          : r.pases + " pases reservados a su nombre";
-      }
-
-      $("rsvpNombre").textContent = r.nombre;
-      $("rsvpPases").textContent = r.pases === 1 ? "1 lugar" : r.pases + " lugares";
-      $("rsvpComentarios").value = r.comentarios || "";
+      pintarTarjeta(r.nombre, r.pases);
+      if(!yaEligio) cantidad = Math.min(Math.max(r.asisten || r.pases, 1), r.pases);
+      if(!$("rsvpComentarios").value) $("rsvpComentarios").value = r.comentarios || "";
 
       if(r.estado === "Confirmado" || r.estado === "No asiste"){
         mostrarGracias(r.estado === "Confirmado", r.asisten);
       } else {
-        pintarChips();
+        prepararFormulario();
         verPantalla("form");
       }
     }).catch(() => {
+      if(datos) return;   // el link ya nos dio lo necesario: no molestamos al invitado
       elCargando.innerHTML =
         'La invitación está tardando en cargar. ' +
         '<button type="button" class="link-editar" id="btnReintentar" ' +
