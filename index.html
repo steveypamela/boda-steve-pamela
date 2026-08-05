@@ -399,6 +399,30 @@ body.locked{overflow:hidden}
   filter:grayscale(.85) contrast(.95);display:block;margin-top:1.6rem;
 }
 
+
+/* ---------- CLIMA ---------- */
+.clima-card{border:1px solid var(--hairline);background:#fff;padding:2.6rem 1.6rem 2.2rem}
+.clima-sol{display:block;margin:0 auto 1.8rem;color:var(--dusty)}
+.clima-datos{
+  display:flex;justify-content:center;
+  border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);
+}
+.clima-datos div{flex:1;padding:1.4rem .4rem;border-right:1px solid var(--hairline)}
+.clima-datos div:last-child{border-right:none}
+.clima-datos b{
+  display:block;font-family:var(--display);font-weight:400;
+  font-size:clamp(1.6rem,5vw,2.1rem);line-height:1;color:var(--ink);
+}
+.clima-datos span{
+  display:block;margin-top:.5rem;
+  font-size:.58rem;letter-spacing:.26em;text-transform:uppercase;color:var(--stone);
+}
+.clima-nota{font-size:.9rem;color:var(--stone);max-width:420px;margin:1.8rem auto 0;line-height:1.7}
+.clima-etiqueta{
+  font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--stone);margin-top:1.6rem;
+}
+
 /* ---------- DRESS CODE ---------- */
 .siluetas{
   display:flex;justify-content:center;gap:3.5rem;
@@ -669,6 +693,35 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
     <iframe
       src="https://www.google.com/maps?q=Iglesia+San+Jose+El+Viejo+Antigua+Guatemala&output=embed"
       loading="lazy" title="Mapa de San José el Viejo" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+  <div class="thread" style="margin-top:4rem"></div>
+</section>
+
+<!-- ==================== CLIMA ==================== -->
+<section id="clima">
+  <p class="eyebrow reveal">Para que vengas preparado</p>
+  <h2 class="reveal">El clima ese día</h2>
+
+  <div class="clima-card reveal">
+    <!-- sol con nubes finas, mismo trazo que las siluetas del dress code -->
+    <svg class="clima-sol" viewBox="0 0 64 64" width="62" height="62" fill="none"
+         stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+      <circle cx="32" cy="32" r="12"/>
+      <path d="M32 8V2M32 62v-6M8 32H2M62 32h-6M15.9 15.9l-4.2-4.2M52.3 52.3l-4.2-4.2M48.1 15.9l4.2-4.2M11.7 52.3l4.2-4.2"/>
+    </svg>
+
+    <div class="clima-datos">
+      <div><b id="climaMax">24°</b><span>Máxima</span></div>
+      <div><b id="climaMin">13°</b><span>Mínima</span></div>
+      <div><b id="climaLluvia">Baja</b><span>Lluvia</span></div>
+    </div>
+
+    <p class="clima-nota" id="climaNota">
+      Diciembre es temporada seca en La Antigua: días soleados y templados,
+      con noches frescas. El sol se oculta cerca de las 5:40 pm, así que te
+      sugerimos traer un abrigo ligero o chal para la recepción.
+    </p>
+    <p class="clima-etiqueta" id="climaEtiqueta">Promedios históricos de diciembre</p>
   </div>
   <div class="thread" style="margin-top:4rem"></div>
 </section>
@@ -988,6 +1041,33 @@ if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
     colorDark: "#2F4156", colorLight: "#ffffff"
   });
 }
+
+// --- Clima: promedios de diciembre y, cerca de la fecha, pronóstico real ---
+(function(){
+  const F = CONFIG.fechaEvento;
+  const faltan = Math.ceil((F - new Date()) / 86400000);
+  if(faltan < 0 || faltan > 15) return;   // fuera del alcance del pronóstico
+
+  const p = n => String(n).padStart(2,"0");
+  const fecha = F.getFullYear() + "-" + p(F.getMonth()+1) + "-" + p(F.getDate());
+
+  fetch("https://api.open-meteo.com/v1/forecast?latitude=14.5586&longitude=-90.7295" +
+        "&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max" +
+        "&timezone=America%2FGuatemala&start_date=" + fecha + "&end_date=" + fecha)
+    .then(r => r.json())
+    .then(d => {
+      const dia = d && d.daily;
+      if(!dia || !dia.temperature_2m_max) return;
+      const max = Math.round(dia.temperature_2m_max[0]);
+      const min = Math.round(dia.temperature_2m_min[0]);
+      const prob = dia.precipitation_probability_max ? dia.precipitation_probability_max[0] : null;
+      document.getElementById("climaMax").textContent = max + "°";
+      document.getElementById("climaMin").textContent = min + "°";
+      document.getElementById("climaLluvia").textContent = (prob === null) ? "Baja" : prob + "%";
+      document.getElementById("climaEtiqueta").textContent = "Pronóstico para el 12 de diciembre";
+    })
+    .catch(() => {});   // si falla, se quedan los promedios históricos
+})();
 
 // --- Carrete de fotos de novios ---
 const carrete = document.getElementById("carrete");
