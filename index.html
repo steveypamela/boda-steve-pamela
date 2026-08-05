@@ -422,6 +422,46 @@ body.locked{overflow:hidden}
   text-align:left;font-size:.88rem;color:var(--stone);line-height:1.7;
 }
 
+
+/* ---------- CUADRO DE OPCIONES (calendario) ---------- */
+.modal{
+  position:fixed;inset:0;z-index:140;
+  display:flex;align-items:center;justify-content:center;padding:1.5rem;
+  background:rgba(31,45,62,.55);
+  opacity:0;pointer-events:none;transition:opacity .35s ease;
+}
+.modal.abierto{opacity:1;pointer-events:auto}
+.modal-card{
+  position:relative;background:var(--paper);
+  border:1px solid var(--hairline);
+  width:100%;max-width:360px;padding:2.4rem 1.8rem 1.6rem;
+  text-align:center;
+  transform:translateY(14px);transition:transform .35s ease;
+}
+.modal.abierto .modal-card{transform:none}
+.modal-card::before{content:"";position:absolute;inset:8px;border:1px solid var(--seaglass);pointer-events:none}
+.modal-card h3{font-size:1.35rem;margin-bottom:.4rem}
+.modal-card .sub{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--stone)}
+.modal-opciones{margin-top:1.8rem;border-top:1px solid var(--hairline)}
+.modal-opciones a{
+  display:block;padding:1.1rem .4rem;
+  border-bottom:1px solid var(--hairline);
+  text-decoration:none;color:var(--ink);
+  font-family:var(--display);font-size:1.02rem;letter-spacing:.06em;
+  transition:background .25s,color .25s;
+}
+.modal-opciones a small{
+  display:block;font-family:var(--body);font-size:.66rem;font-weight:300;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--stone);margin-top:.25rem;
+}
+.modal-opciones a:hover{background:#fff}
+.modal-cerrar{
+  margin-top:1.2rem;background:none;border:none;cursor:pointer;
+  font-family:var(--body);font-size:.64rem;font-weight:300;
+  letter-spacing:.28em;text-transform:uppercase;color:var(--stone);
+}
+.modal-cerrar:hover{color:var(--ink)}
+
 /* ---------- CLIMA ---------- */
 .clima-card{border:1px solid var(--hairline);background:#fff;padding:2.6rem 1.6rem 2.2rem}
 .clima-sol{display:block;margin:0 auto 1.8rem;color:var(--dusty)}
@@ -721,10 +761,7 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   </div>
 
   <div class="btn-doble reveal">
-    <!-- El botón se adapta al dispositivo: en iPhone/Mac usa el calendario del
-         sistema (boda.ics) y en lo demás abre Google Calendar sin descargar nada. -->
-    <a class="btn" id="btnCalendario" href="boda.ics" style="margin-top:0">Agregar al calendario</a>
-    <a class="btn-sec" id="btnCalAlterno" href="boda.ics">Usar otro calendario</a>
+    <button type="button" class="btn" id="btnCalendario" style="margin-top:0;background:transparent;cursor:pointer;font-family:var(--body);font-weight:300">Agregar al calendario</button>
   </div>
 
   <div class="mapa reveal">
@@ -1014,6 +1051,26 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   12 · 12 · 2026 · La Antigua Guatemala
 </footer>
 
+<!-- ==================== OPCIONES DE CALENDARIO ==================== -->
+<div class="modal" id="modalCal" role="dialog" aria-modal="true" aria-labelledby="modalCalTitulo">
+  <div class="modal-card">
+    <h3 id="modalCalTitulo">12 · 12 · 2026</h3>
+    <p class="sub">¿A qué calendario lo agregamos?</p>
+    <div class="modal-opciones">
+      <a href="#" id="calGoogle" target="_blank" rel="noopener">
+        Google Calendar<small>Android y computadora</small>
+      </a>
+      <a href="boda.ics" id="calApple">
+        Calendario de Apple<small>iPhone, iPad y Mac</small>
+      </a>
+      <a href="boda.ics" id="calOtro">
+        Outlook u otro<small>Descarga el evento</small>
+      </a>
+    </div>
+    <button type="button" class="modal-cerrar" id="calCerrar">Cerrar</button>
+  </div>
+</div>
+
 <!-- ==================== MÚSICA ==================== -->
 <!-- Sube cancion.mp3 a la raíz del repositorio. Si no existe, el reproductor se oculta solo. -->
 <audio id="cancion" src="cancion.mp3" loop preload="metadata"></audio>
@@ -1105,14 +1162,11 @@ if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
   });
 }
 
-// --- Agregar al calendario ---
-// iPhone, iPad y Mac abren el archivo .ics directo en su app Calendario.
-// En Android y computadoras con Windows se abre Google Calendar, así nadie
-// tiene que descargar un archivo.
+// --- Agregar al calendario (un botón, tres opciones) ---
 (function(){
   const btn = document.getElementById("btnCalendario");
-  const alt = document.getElementById("btnCalAlterno");
-  if(!btn) return;
+  const modal = document.getElementById("modalCal");
+  if(!btn || !modal) return;
 
   const p = new URLSearchParams({
     action: "TEMPLATE",
@@ -1122,18 +1176,18 @@ if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
              "Invitación: " + location.origin + location.pathname,
     location: "San José el Viejo, 5a Avenida Sur, La Antigua Guatemala"
   });
-  const urlGoogle = "https://calendar.google.com/calendar/render?" + p.toString();
+  document.getElementById("calGoogle").href =
+    "https://calendar.google.com/calendar/render?" + p.toString();
 
-  const esApple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
-  if(esApple){
-    btn.href = "boda.ics";
-    alt.href = urlGoogle; alt.target = "_blank"; alt.rel = "noopener";
-    alt.textContent = "O usar Google Calendar";
-  } else {
-    btn.href = urlGoogle; btn.target = "_blank"; btn.rel = "noopener";
-    alt.href = "boda.ics";
-    alt.textContent = "O descargar para Apple u Outlook";
-  }
+  const abrir  = () => modal.classList.add("abierto");
+  const cerrar = () => modal.classList.remove("abierto");
+
+  btn.addEventListener("click", abrir);
+  document.getElementById("calCerrar").addEventListener("click", cerrar);
+  modal.addEventListener("click", e => { if(e.target === modal) cerrar(); });
+  document.addEventListener("keydown", e => { if(e.key === "Escape") cerrar(); });
+  modal.querySelectorAll(".modal-opciones a").forEach(a =>
+    a.addEventListener("click", () => setTimeout(cerrar, 400)));
 })();
 
 // --- Clima: promedios de diciembre y, cerca de la fecha, pronóstico real ---
