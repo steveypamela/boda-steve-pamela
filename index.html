@@ -1345,11 +1345,19 @@ if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
 (function(){
   const F = CONFIG.fechaEvento;
   const hoy = new Date();
-  const mismoDia = hoy.getFullYear() === F.getFullYear() &&
-                   hoy.getMonth()    === F.getMonth() &&
-                   hoy.getDate()     === F.getDate();
-  const faltanDias = Math.ceil((new Date(F.getFullYear(), F.getMonth(), F.getDate()) -
+
+  // Vista previa para ustedes: agreguen &vista=hoy o &vista=despues al link
+  // para ver cómo se verá la invitación ese día. Los invitados nunca la usan.
+  const vista = (qs.get("vista") || "").toLowerCase();
+
+  const esMismaFecha = hoy.getFullYear() === F.getFullYear() &&
+                       hoy.getMonth()    === F.getMonth() &&
+                       hoy.getDate()     === F.getDate();
+  const diasReales = Math.ceil((new Date(F.getFullYear(), F.getMonth(), F.getDate()) -
                      new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate())) / 86400000);
+
+  const mismoDia   = vista === "hoy"     ? true  : (vista === "despues" ? false : esMismaFecha);
+  const faltanDias = vista === "hoy"     ? 0     : (vista === "despues" ? -1 : diasReales);
 
   // Título de la pestaña
   document.title = mismoDia ? "Hoy nos casamos · Steve & Pamela"
