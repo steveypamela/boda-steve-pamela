@@ -1002,6 +1002,7 @@ const carrete = document.getElementById("carrete");
       img.src = `fotos/${n}.${CONFIG.carreteExt || "jpg"}`;
       img.alt = "Steve y Pamela de novios";
       img.loading = "lazy";
+      img.decoding = "async";
       img.onerror = () => cuadro.remove();
       cuadro.appendChild(img);
       carrete.appendChild(cuadro);
@@ -1122,7 +1123,7 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
       const cb = "rsvpCb" + (++contador);
       const s = document.createElement("script");
       const limpiar = () => { delete window[cb]; s.remove(); clearTimeout(t); };
-      const t = setTimeout(() => { limpiar(); reject(new Error("timeout")); }, 15000);
+      const t = setTimeout(() => { limpiar(); reject(new Error("timeout")); }, 25000);
       window[cb] = data => { limpiar(); resolve(data); };
       s.src = CONFIG.apiUrl + "?callback=" + cb + "&" +
         Object.keys(params).map(k => k + "=" + encodeURIComponent(params[k])).join("&");
@@ -1218,7 +1219,19 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
       verPantalla("sincodigo");
       return;
     }
-    api({ accion: "buscar", codigo: codigo }).then(r => {
+    // Google "duerme" el script cuando no se usa: la primera consulta puede
+    // tardar. Reintentamos automáticamente antes de dar error.
+    function buscarConReintentos(intento){
+      return api({ accion: "buscar", codigo: codigo }).catch(err => {
+        if(intento < 3){
+          elCargando.textContent = "Preparando tu invitación…";
+          return new Promise(res => setTimeout(res, 1500)).then(() => buscarConReintentos(intento + 1));
+        }
+        throw err;
+      });
+    }
+
+    buscarConReintentos(1).then(r => {
       if(!r || !r.ok){
         elCargando.textContent = "No pudimos reconocer tu invitación. Escríbenos y lo resolvemos.";
         return;
@@ -1246,7 +1259,15 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
         verPantalla("form");
       }
     }).catch(() => {
-      elCargando.textContent = "No pudimos cargar tu invitación. Revisa tu conexión e inténtalo de nuevo.";
+      elCargando.innerHTML =
+        'La invitación está tardando en cargar. ' +
+        '<button type="button" class="link-editar" id="btnReintentar" ' +
+        'style="margin-top:1.2rem">Reintentar</button>';
+      const btnR = $("btnReintentar");
+      if(btnR) btnR.addEventListener("click", () => {
+        elCargando.textContent = "Cargando tu invitación…";
+        iniciar();
+      });
     });
   }
 
@@ -1261,14 +1282,20 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
     const nombres = [...$("bloqueNombres").querySelectorAll("input")]
       .map(i => i.value.trim()).filter(Boolean).join("|");
 
-    api({
+    const enviarIntento = intento => api({
       accion: "guardar",
       codigo: codigo,
       asiste: asiste ? "si" : "no",
       cantidad: asiste ? cantidad : 0,
       nombres: nombres,
       comentarios: $("rsvpComentarios").value.trim()
-    }).then(r => {
+    }).catch(err => {
+      if(intento < 2) return new Promise(res => setTimeout(res, 1500))
+        .then(() => enviarIntento(intento + 1));
+      throw err;
+    });
+
+    enviarIntento(1).then(r => {
       if(r && r.ok){
         if(datos) datos.estado = r.asiste ? "Confirmado" : "No asiste";
         mostrarGracias(r.asiste, r.cantidad);
