@@ -244,48 +244,46 @@ body.locked{overflow:hidden}
 .bebes-amp{font-family:var(--display);font-style:italic;font-size:1.7rem;color:var(--sage)}
 .bebes-nota{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--stone);margin-bottom:1.8rem}
 
-/* ---------- CARRETE DE FOTOS DE NOVIOS ---------- */
-.carrete-wrap{
-  margin:2.4rem calc(50% - 50vw) 2.8rem;   /* sangrado a todo el ancho de pantalla */
-}
+/* ---------- CARRETE DE FOTOS (estilo coverflow) ---------- */
+.carrete-wrap{margin:2.4rem calc(50% - 50vw) 2.8rem}
 .carrete-titulo{
   font-family:var(--display);font-style:italic;
   font-size:1rem;letter-spacing:.16em;color:var(--ink);
-  margin-bottom:1.2rem;
+  margin-bottom:1.6rem;
 }
-.carrete{
-  display:flex;gap:0;
-  overflow-x:auto;overscroll-behavior-x:contain;
-  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+.cover{
+  position:relative;height:330px;
+  perspective:1300px;
+  overflow:hidden;
+  touch-action:pan-y;
   cursor:grab;
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
-  mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+  -webkit-user-select:none;user-select:none;
 }
-.carrete::-webkit-scrollbar{display:none}
-.carrete.arrastrando{cursor:grabbing}
-/* cada fotograma del rollo */
-.cuadro{
-  flex:0 0 auto;position:relative;
-  background:linear-gradient(180deg,#7189A6,#5F7692);
-  padding:26px 9px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.12), inset 0 -1px 0 rgba(0,0,0,.14);
+.cover.arrastrando{cursor:grabbing}
+.cover-item{
+  position:absolute;top:50%;left:50%;
+  width:206px;height:275px;margin:-137px 0 0 -103px;
+  background:#fff;padding:7px;
+  box-shadow:0 14px 30px rgba(47,65,86,.18);
+  transition:transform .65s cubic-bezier(.25,.8,.3,1),opacity .65s ease;
+  will-change:transform;
 }
-/* perforaciones del rollo (troqueladas: del color del fondo de la página) */
-.cuadro::before,.cuadro::after{
-  content:"";position:absolute;left:0;right:0;height:12px;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='12'%3E%3Crect x='6' y='1' width='10' height='10' rx='2.5' fill='%23F8F9F6'/%3E%3C/svg%3E");
-  background-repeat:repeat-x;background-position:center;
+.cover-item img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  -webkit-user-drag:none;pointer-events:none;
 }
-.cuadro::before{top:7px}
-.cuadro::after{bottom:7px}
-.cuadro img{
-  height:150px;width:auto;display:block;
-  border:1px solid rgba(255,255,255,.14);
-  user-select:none;-webkit-user-drag:none;pointer-events:none;
+.cover-item.activa{box-shadow:0 22px 46px rgba(47,65,86,.3)}
+.cover-item:not(.activa) img{filter:saturate(.82) brightness(.96)}
+/* puntos indicadores */
+.cover-puntos{display:flex;gap:.45rem;justify-content:center;margin-top:1.6rem}
+.cover-puntos span{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--hairline);transition:background .4s,transform .4s;
 }
+.cover-puntos span.on{background:var(--sage);transform:scale(1.5)}
 @media (max-width:560px){
-  .cuadro img{height:122px}
-  .cuadro{padding:22px 7px}
+  .cover{height:280px}
+  .cover-item{width:168px;height:224px;margin:-112px 0 0 -84px}
 }
 
 /* ---------- INVITACIÓN PERSONALIZADA ---------- */
@@ -838,7 +836,8 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   <!-- Carrete de fotos de novios: sube fotos/10.jpeg, 11.jpeg... (rango en CONFIG) -->
   <div class="carrete-wrap reveal">
     <p class="carrete-titulo">Nuestros años de novios</p>
-    <div class="carrete" id="carrete" aria-label="Fotos de nuestro noviazgo"></div>
+    <div class="cover" id="cover" aria-label="Fotos de nuestro noviazgo"></div>
+    <div class="cover-puntos" id="coverPuntos" aria-hidden="true"></div>
   </div>
 
   <p class="carrete-titulo reveal" style="margin-top:.6rem">Nuestros momentos importantes</p>
@@ -1069,68 +1068,106 @@ if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
     .catch(() => {});   // si falla, se quedan los promedios históricos
 })();
 
-// --- Carrete de fotos de novios ---
-const carrete = document.getElementById("carrete");
+// --- Carrete de fotos de novios (coverflow) ---
 (function(){
-  if(!carrete) return;
-  // dos copias del set para lograr el bucle infinito
-  for(let vuelta = 0; vuelta < 2; vuelta++){
-    for(let n = CONFIG.carreteDesde; n <= CONFIG.carreteHasta; n++){
-      const cuadro = document.createElement("div");
-      cuadro.className = "cuadro";
-      const img = document.createElement("img");
-      img.src = `fotos/${n}.${CONFIG.carreteExt || "jpg"}`;
-      img.alt = "Steve y Pamela de novios";
-      img.loading = "lazy";
-      img.decoding = "async";
-      img.onerror = () => cuadro.remove();
-      cuadro.appendChild(img);
-      carrete.appendChild(cuadro);
-    }
+  const cover = document.getElementById("cover");
+  const puntos = document.getElementById("coverPuntos");
+  if(!cover) return;
+
+  const total = CONFIG.carreteHasta - CONFIG.carreteDesde + 1;
+  const VISIBLES = 2;          // cuántas se ven a cada lado
+  const PRECARGA = 3;          // cuántas se descargan por adelantado
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let actual = Math.floor(total / 2);
+  const slides = [];
+
+  // crear las tarjetas (sin src todavía: se cargan solo las cercanas)
+  for(let k = 0; k < total; k++){
+    const div = document.createElement("div");
+    div.className = "cover-item";
+    const img = document.createElement("img");
+    img.alt = "Steve y Pamela";
+    img.decoding = "async";
+    img.dataset.src = `fotos/${CONFIG.carreteDesde + k}.${CONFIG.carreteExt || "jpg"}`;
+    img.onerror = () => { div.style.visibility = "hidden"; };
+    div.appendChild(img);
+    div.addEventListener("click", () => { if(k !== actual){ ir(k); pausar(7000); } });
+    cover.appendChild(div);
+    slides.push(div);
+
+    const p = document.createElement("span");
+    puntos.appendChild(p);
   }
-  let pausa = false, timerReanudar = null;
+
+  // distancia más corta considerando que el carrete es circular
+  function distancia(i){
+    let d = i - actual;
+    if(d >  total / 2) d -= total;
+    if(d < -total / 2) d += total;
+    return d;
+  }
+
+  function pintar(){
+    slides.forEach((el, i) => {
+      const d = distancia(i);
+      const abs = Math.abs(d);
+      const img = el.firstChild;
+      if(abs <= PRECARGA && !img.src) img.src = img.dataset.src;   // carga diferida
+      if(abs > VISIBLES){
+        el.style.opacity = 0;
+        el.style.pointerEvents = "none";
+        el.style.transform = `translateX(${d * 46}%) scale(.6)`;
+        el.style.zIndex = 0;
+      } else {
+        el.style.opacity = abs === VISIBLES ? .55 : 1;
+        el.style.pointerEvents = "auto";
+        el.style.zIndex = 10 - abs;
+        el.style.transform =
+          `translateX(${d * 52}%) translateZ(${-abs * 90}px) ` +
+          `rotateY(${d * -32}deg) scale(${1 - abs * .06})`;
+      }
+      el.classList.toggle("activa", d === 0);
+      puntos.children[i].classList.toggle("on", d === 0);
+    });
+  }
+
+  function ir(i){
+    actual = ((i % total) + total) % total;
+    pintar();
+  }
+
+  /* --- avance automático, se pausa al interactuar --- */
+  let timer = null, pausado = false, reanudar = null;
   function pausar(ms){
-    pausa = true;
-    clearTimeout(timerReanudar);
-    timerReanudar = setTimeout(()=>{ pausa = false; }, ms);
+    pausado = true;
+    clearTimeout(reanudar);
+    reanudar = setTimeout(() => { pausado = false; }, ms);
   }
-  // arrastre con cursor (en táctil el scroll nativo ya funciona)
-  let arrastrando = false, xIni = 0, scrollIni = 0;
-  carrete.addEventListener("pointerdown", e => {
-    arrastrando = true; xIni = e.clientX; scrollIni = carrete.scrollLeft;
-    carrete.classList.add("arrastrando");
-    carrete.setPointerCapture(e.pointerId);
-    pausar(4000);
-  });
-  carrete.addEventListener("pointermove", e => {
-    if(arrastrando) carrete.scrollLeft = scrollIni - (e.clientX - xIni);
-  });
-  ["pointerup","pointercancel"].forEach(ev => carrete.addEventListener(ev, () => {
-    arrastrando = false; carrete.classList.remove("arrastrando");
-  }));
-  carrete.addEventListener("touchstart", () => pausar(4000), {passive:true});
-  carrete.addEventListener("wheel", () => pausar(4000), {passive:true});
-  // avance automático derecha -> izquierda con bucle
-  // (la posición se acumula en una variable propia porque los navegadores
-  //  móviles redondean scrollLeft a enteros y los +0.45 se perderían)
-  let pos = 0;
-  function paso(){
-    const mitad = carrete.scrollWidth / 2;
-    if(mitad > 0){
-      if(pausa || arrastrando){
-        pos = carrete.scrollLeft;            // sincronizar tras la interacción
-      } else if(!document.body.classList.contains("locked")){
-        pos += 0.45;
-        if(pos >= mitad) pos -= mitad;
-        carrete.scrollLeft = pos;
-      }
-      if(carrete.scrollLeft >= mitad){       // envolver también el arrastre manual
-        carrete.scrollLeft -= mitad; pos = carrete.scrollLeft;
-      }
-    }
-    requestAnimationFrame(paso);
+  if(!reduce){
+    timer = setInterval(() => {
+      if(!pausado && !document.body.classList.contains("locked")) ir(actual + 1);
+    }, 4200);
   }
-  requestAnimationFrame(paso);
+
+  /* --- deslizar con el dedo o arrastrar con el cursor --- */
+  let xIni = null;
+  cover.addEventListener("pointerdown", e => {
+    xIni = e.clientX;
+    cover.classList.add("arrastrando");
+    pausar(7000);
+  });
+  cover.addEventListener("pointerup", e => {
+    cover.classList.remove("arrastrando");
+    if(xIni === null) return;
+    const dx = e.clientX - xIni;
+    if(Math.abs(dx) > 40) ir(actual + (dx < 0 ? 1 : -1));
+    xIni = null;
+  });
+  cover.addEventListener("pointercancel", () => {
+    cover.classList.remove("arrastrando"); xIni = null;
+  });
+
+  pintar();
 })();
 
 // --- Reproductor de música ---
