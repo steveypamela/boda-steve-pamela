@@ -50,7 +50,9 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  background:var(--paper);
+  /* grano de papel muy sutil: da sensación de cartulina, pesa unos pocos bytes */
+  background-color:var(--paper);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)' opacity='.05'/%3E%3C/svg%3E");
   color:var(--ink);
   font-family:var(--body);
   font-weight:300;
@@ -365,7 +367,7 @@ body.locked{overflow:hidden}
   display:flex;flex-direction:column;justify-content:center;align-items:center;
   position:relative;overflow:hidden;
   padding:2rem 1.6rem;
-  background:linear-gradient(180deg,#F4F6F1 0%,var(--paper) 60%);
+  background:linear-gradient(180deg,rgba(244,246,241,.92) 0%,rgba(248,249,246,.6) 60%);
 }
 .hero .monogram{
   position:absolute;inset:0;
@@ -691,6 +693,27 @@ body.locked{overflow:hidden}
   letter-spacing:.26em;text-transform:uppercase;color:var(--sage-lt);
   border-bottom:1px solid rgba(192,207,178,.4);padding-bottom:.2rem;
 }
+
+
+
+/* ---------- MODO DÍA DEL EVENTO / DESPUÉS ---------- */
+.hoy-card{
+  border:1px solid var(--hairline);background:#fff;
+  padding:2.6rem 1.8rem;position:relative;
+}
+.hoy-card::before{content:"";position:absolute;inset:8px;border:1px solid var(--seaglass);pointer-events:none}
+.hoy-titulo{
+  font-family:var(--display);font-size:clamp(1.8rem,6vw,2.6rem);
+  letter-spacing:.04em;line-height:1.2;
+}
+.hoy-hora{font-family:var(--display);font-size:2.2rem;color:var(--dusty);margin:.8rem 0 .2rem}
+.hoy-sub{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--stone)}
+.hoy-acciones{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+.hoy-acciones .btn{margin-top:0}
+
+/* ---------- SILUETA DE LOS VOLCANES ---------- */
+.volcanes{display:block;width:min(420px,82%);margin:0 auto 2.2rem;color:var(--sage)}
+.volcanes path{vector-effect:non-scaling-stroke}
 
 /* ---------- FOOTER ---------- */
 footer{
@@ -1108,6 +1131,16 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 
 
 <footer>
+  <!-- El perfil del Volcán de Agua y el de Fuego, como se ven desde La Antigua -->
+  <svg class="volcanes" viewBox="0 0 320 72" fill="none" aria-hidden="true">
+    <path d="M0 66 C 20 64 42 60 60 52 L 92 20 C 95 17 99 17 102 20 L 134 54
+             C 146 62 152 65 160 66 C 172 64 184 59 194 51 L 212 33
+             C 215 30 219 30 222 33 L 240 53 C 250 62 258 65 268 66
+             C 286 65 304 63 320 62"
+          stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M217 31 C 215 26 219 23 221 18 C 223 14 221 11 219 8"
+          stroke="var(--seaglass)" stroke-width=".8" stroke-linecap="round"/>
+  </svg>
   <img src="logo.png" alt="" onerror="this.remove()" style="width:58px;display:block;margin:0 auto .9rem;opacity:.9">
   12 · 12 · 2026 · La Antigua Guatemala
 </footer>
@@ -1216,6 +1249,70 @@ if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
     colorDark: "#2F4156", colorLight: "#ffffff"
   });
 }
+
+// --- La invitación cambia según el día: antes, el día de la boda, y después ---
+(function(){
+  const F = CONFIG.fechaEvento;
+  const hoy = new Date();
+  const mismoDia = hoy.getFullYear() === F.getFullYear() &&
+                   hoy.getMonth()    === F.getMonth() &&
+                   hoy.getDate()     === F.getDate();
+  const faltanDias = Math.ceil((new Date(F.getFullYear(), F.getMonth(), F.getDate()) -
+                     new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate())) / 86400000);
+
+  // Título de la pestaña
+  document.title = mismoDia ? "Hoy nos casamos · Steve & Pamela"
+    : faltanDias > 0 ? "Faltan " + faltanDias + (faltanDias === 1 ? " día" : " días") + " · Steve & Pamela"
+    : "Steve & Pamela · 12.12.2026";
+
+  if(faltanDias > 0) return;   // antes de la boda todo queda igual
+
+  const sec = s => document.getElementById(s);
+  const album = sec("album");
+  const countdown = document.getElementById("countdown");
+  const seccionCountdown = countdown ? countdown.closest("section") : null;
+
+  // --- EL DÍA DE LA BODA ---
+  if(mismoDia){
+    if(seccionCountdown){
+      seccionCountdown.innerHTML =
+        '<div class="hoy-card reveal in">' +
+          '<p class="eyebrow" style="margin-bottom:.6rem">Por fin llegó el día</p>' +
+          '<h2 class="hoy-titulo" style="margin-bottom:0">Hoy nos casamos</h2>' +
+          '<div class="hoy-hora">4:30 PM</div>' +
+          '<p class="hoy-sub">San José el Viejo · La Antigua Guatemala</p>' +
+          '<div class="hoy-acciones">' +
+            '<a class="btn" href="' + CONFIG.mapaCeremonia + '" target="_blank" rel="noopener">Ver ubicación</a>' +
+            '<a class="btn" href="https://maps.google.com/?q=Parqueo+La+Estacion+de+Antigua" target="_blank" rel="noopener">Parqueo</a>' +
+          '</div>' +
+        '</div>' +
+        '<div class="thread" style="margin-top:4rem"></div>';
+    }
+    // el álbum sube: es lo que van a usar durante la fiesta
+    if(album && seccionCountdown && album.parentNode)
+      seccionCountdown.parentNode.insertBefore(album, seccionCountdown.nextSibling);
+    return;
+  }
+
+  // --- DESPUÉS DE LA BODA ---
+  if(seccionCountdown){
+    seccionCountdown.innerHTML =
+      '<div class="hoy-card reveal in">' +
+        '<p class="eyebrow" style="margin-bottom:.6rem">12 · 12 · 2026</p>' +
+        '<h2 class="hoy-titulo" style="margin-bottom:.8rem">Gracias por acompañarnos</h2>' +
+        '<p style="color:var(--stone);max-width:420px;margin:0 auto">' +
+          'Fue un día perfecto porque ustedes estuvieron ahí. Si tomaste fotos, ' +
+          'súbelas a nuestro álbum: queremos revivirlo con su mirada.' +
+        '</p>' +
+      '</div>' +
+      '<div class="thread" style="margin-top:4rem"></div>';
+  }
+  if(album && seccionCountdown && album.parentNode)
+    seccionCountdown.parentNode.insertBefore(album, seccionCountdown.nextSibling);
+
+  // ya no tiene sentido confirmar ni ver el clima
+  ["rsvp","clima","llegar"].forEach(id => { const s = sec(id); if(s) s.style.display = "none"; });
+})();
 
 // --- Agregar al calendario (un botón, tres opciones) ---
 (function(){
@@ -1399,6 +1496,8 @@ document.body.classList.add("locked");
 function abrirSobre(){
   if(sobre.classList.contains("open")) return;
   sobre.classList.add("open");
+  // golpecito háptico: en celular se siente como romper el sello de cera
+  if(navigator.vibrate) navigator.vibrate([14, 45, 22]);
   audio.play().catch(()=>{});                      // la canción arranca al abrir
   document.querySelectorAll(".hero .reveal").forEach((el,i)=>{   // entrada escalonada
     el.classList.remove("in");
