@@ -170,19 +170,20 @@ body.locked{overflow:hidden}
 }
 @keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
 .env-para{
-  position:absolute;left:9%;bottom:13%;width:54%;
+  position:absolute;left:9%;bottom:24%;width:41%;
   text-align:left;z-index:6;pointer-events:none;
   opacity:0;transition:opacity .8s ease .5s;
+  text-shadow:0 1px 6px rgba(16,26,40,.45);
 }
 .env-para.visible{opacity:1}
 .env-para .para-lbl{
   display:block;font-size:.52rem;letter-spacing:.4em;text-transform:uppercase;
-  color:rgba(233,238,245,.6);margin-bottom:.35rem;
+  color:rgba(226,233,242,.75);margin-bottom:.4rem;
 }
 .env-para .para-nombre{
   display:block;font-family:var(--display);font-style:italic;
   font-size:clamp(.9rem,3.2vw,1.1rem);line-height:1.35;
-  color:rgba(240,244,250,.94);
+  color:#F2F5FA;
 }
 .env-para .para-linea{
   display:block;width:34px;height:1px;margin-top:.5rem;
