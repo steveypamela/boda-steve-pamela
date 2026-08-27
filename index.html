@@ -1677,13 +1677,15 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
       : (pases === 1 ? "1 pase reservado a su nombre"
                      : pases + " pases reservados a su nombre");
 
-    // El día de la boda la invitación se convierte en su pase de entrada
+       // La mesa se muestra siempre, en cuanto esté asignada en la hoja
+    if(mesa){
+      $("invMesa").hidden = false;
+      $("invMesaNum").textContent = /^\d+$/.test(String(mesa).trim())
+        ? "Mesa " + String(mesa).trim() : String(mesa).trim();
+    }
+
+    // El pase de entrada sigue apareciendo solo el día de la boda
     if(window.esDiaDeLaBoda){
-      if(mesa){
-        $("invMesa").hidden = false;
-        $("invMesaNum").textContent = /^\d+$/.test(String(mesa).trim())
-          ? "Mesa " + String(mesa).trim() : String(mesa).trim();
-      }
       const cajaQR = $("qrPase");
       if(codigo && cajaQR && !cajaQR.hasChildNodes() && typeof QRCode !== "undefined"){
         $("invPase").hidden = false;
