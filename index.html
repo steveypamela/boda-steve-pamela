@@ -855,7 +855,7 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
     <div class="env-div" style="margin:.9rem auto"></div>
     <p class="invitado-pases" id="invPases"></p>
 
-    <!-- Mesa asignada y pase de entrada: solo aparecen el día de la boda -->
+    <!-- Mesa asignada (se muestra siempre) y pase de entrada (solo el día de la boda) -->
     <div class="inv-mesa" id="invMesa" hidden>
       <span class="lbl">Su mesa</span>
       <span class="num" id="invMesaNum"></span>
@@ -1219,7 +1219,6 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   </button>
   <span class="lbl">Nuestra canción</span>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 /* ============================================================
@@ -1677,7 +1676,7 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
       : (pases === 1 ? "1 pase reservado a su nombre"
                      : pases + " pases reservados a su nombre");
 
-       // La mesa se muestra siempre, en cuanto esté asignada en la hoja
+    // La mesa se muestra siempre, en cuanto esté asignada en la hoja
     if(mesa){
       $("invMesa").hidden = false;
       $("invMesaNum").textContent = /^\d+$/.test(String(mesa).trim())
