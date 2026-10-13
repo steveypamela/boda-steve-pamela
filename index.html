@@ -29,7 +29,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Karla:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+<!-- Caligrafía para los nombres. Para cambiar el estilo, edita la variable
+     --script en el CSS: 'Great Vibes', 'Pinyon Script' o 'Parisienne'. -->
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pinyon+Script&family=Parisienne&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -46,6 +48,7 @@
   --hairline: #DDE3DA;
   --display: 'Marcellus', serif;
   --body:    'Karla', sans-serif;
+  --script:  'Great Vibes', cursive;   /* alternativas: 'Pinyon Script', 'Parisienne' */
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{
@@ -69,7 +72,7 @@ body{
 .eyebrow{
   overflow-wrap:break-word;
   font-size:.72rem;
-  letter-spacing:.42em;
+  letter-spacing:.42em;text-indent:.42em;
   text-transform:uppercase;
   color:var(--sage-dk);
   margin-bottom:1.4rem;
@@ -307,7 +310,7 @@ body.locked{overflow:hidden}
 .polaroid img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
 .polaroid figcaption{font-family:var(--display);font-style:italic;margin-top:.55rem;font-size:.9rem;color:var(--ink)}
 .bebes-amp{font-family:var(--display);font-style:italic;font-size:1.7rem;color:var(--sage)}
-.bebes-nota{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--stone);margin-bottom:1.8rem}
+.bebes-nota{font-size:.74rem;letter-spacing:.2em;text-indent:.2em;text-transform:uppercase;color:var(--stone);margin-bottom:1.8rem}
 
 /* ---------- CARRETE DE FOTOS (estilo coverflow) ---------- */
 .carrete-wrap{margin:2.4rem calc(50% - 50vw) 2.8rem}
@@ -354,13 +357,13 @@ body.locked{overflow:hidden}
 
 /* ---------- PADRES ---------- */
 .padres-intro{
-  font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;
+  font-size:.72rem;letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;
   color:var(--sage-dk);line-height:2;max-width:430px;margin:0 auto 2.6rem;
 }
 .padres{display:flex;justify-content:center;align-items:center;gap:2.2rem;flex-wrap:wrap}
 .padres .lado{flex:1 1 220px}
 .padres .rol{
-  font-size:.6rem;letter-spacing:.32em;text-transform:uppercase;
+  font-size:.6rem;letter-spacing:.32em;text-indent:.32em;text-transform:uppercase;
   color:var(--stone);margin-bottom:.7rem;
 }
 .padres .nombre{
@@ -388,7 +391,7 @@ body.locked{overflow:hidden}
 }
 .cuenta dl{display:block;margin:0}
 .cuenta dt{
-  font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;
+  font-size:.58rem;letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;
   color:var(--stone);margin-top:1.1rem;
 }
 .cuenta dd{
@@ -408,11 +411,11 @@ body.locked{overflow:hidden}
 
 /* ---------- NOMBRES DE LOS NOVIOS (después de los padres) ---------- */
 .nosotros{
-  font-size:.68rem;letter-spacing:.42em;text-transform:uppercase;
+  font-size:.68rem;letter-spacing:.42em;text-indent:.42em;text-transform:uppercase;
   color:var(--stone);margin:3.2rem 0 .4rem;
 }
 .novios{
-  font-family:"Great Vibes", cursive;
+  font-family:var(--script);
   color:var(--ink);
   line-height:1.05;
 }
@@ -435,7 +438,7 @@ body.locked{overflow:hidden}
 .invitado-card{border:1px solid var(--hairline);background:#fff;padding:2.6rem 1.8rem;position:relative}
 .invitado-card::before{content:"";position:absolute;inset:8px;border:1px solid var(--seaglass);pointer-events:none}
 .invitado-nombre{font-family:var(--display);font-size:clamp(1.6rem,5vw,2.2rem);letter-spacing:.06em}
-.invitado-pases{font-size:.76rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sage-dk);margin-top:.3rem}
+.invitado-pases{font-size:.76rem;letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;color:var(--sage-dk);margin-top:.3rem}
 
 /* ---------- QR DEL ÁLBUM ---------- */
 .qr-marco{display:inline-block;background:#fff;border:1px solid var(--hairline);padding:1.1rem;margin-top:2.2rem;position:relative}
@@ -453,6 +456,7 @@ body.locked{overflow:hidden}
 /* ---------- HERO ---------- */
 .hero{
   min-height:100svh;
+  text-align:center;
   display:flex;flex-direction:column;justify-content:center;align-items:center;
   position:relative;overflow:hidden;
   padding:2rem 1.6rem;
@@ -467,28 +471,32 @@ body.locked{overflow:hidden}
 .hero-logo{width:92px;margin-bottom:1.8rem;opacity:.92}
 .hero .eyebrow{margin-bottom:2.2rem}
 .hero h1{
-  font-size:clamp(2.6rem,8vw,4.6rem);
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  line-height:1.15;
+  font-family:var(--script);
+  font-weight:400;
+  font-size:clamp(3.6rem,17vw,6.2rem);
+  letter-spacing:.02em;
+  text-transform:none;
+  line-height:1;
+  padding:0 .5rem;          /* aire para los remates de la caligrafía */
 }
+.hero h1 .nombre{display:block;margin:.1rem 0}
 .hero .amp{
   display:block;
-  font-size:clamp(1.6rem,4vw,2.4rem);
+  font-size:clamp(1.9rem,8vw,3rem);
   color:var(--sage);
-  font-style:italic;
-  font-family:var(--display);
-  margin:.4rem 0;
+  font-family:var(--script);
+  font-style:normal;
+  margin:.35rem 0;
   text-transform:none;letter-spacing:0;
 }
 .hero .fecha{
   margin-top:2.4rem;
-  font-size:.86rem;letter-spacing:.34em;text-transform:uppercase;color:var(--stone);
+  font-size:.86rem;letter-spacing:.34em;text-indent:.34em;text-transform:uppercase;color:var(--stone);
 }
-.hero .lugar{font-size:.8rem;letter-spacing:.24em;text-transform:uppercase;color:var(--stone);margin-top:.5rem}
+.hero .lugar{font-size:.8rem;letter-spacing:.24em;text-indent:.24em;text-transform:uppercase;color:var(--stone);margin-top:.5rem}
 .scroll-hint{
   position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);
-  font-size:.66rem;letter-spacing:.36em;text-transform:uppercase;color:var(--stone);
+  font-size:.66rem;letter-spacing:.36em;text-indent:.36em;text-transform:uppercase;color:var(--stone);
 }
 .scroll-hint::after{
   content:"";display:block;width:1px;height:34px;background:var(--stone);
@@ -513,7 +521,7 @@ body.locked{overflow:hidden}
 }
 .countdown span{
   display:block;margin-top:.6rem;
-  font-size:.62rem;letter-spacing:.32em;text-transform:uppercase;color:var(--stone);
+  font-size:.62rem;letter-spacing:.32em;text-indent:.32em;text-transform:uppercase;color:var(--stone);
 }
 
 /* ---------- ITINERARIO ---------- */
@@ -626,7 +634,7 @@ body.locked{overflow:hidden}
 }
 .clima-nota{font-size:.9rem;color:var(--stone);max-width:420px;margin:1.8rem auto 0;line-height:1.7}
 .clima-etiqueta{
-  font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;
+  font-size:.6rem;letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;
   color:var(--stone);margin-top:1.6rem;
 }
 
@@ -647,7 +655,7 @@ body.locked{overflow:hidden}
 .silueta figcaption b{display:block;font-weight:500;color:var(--ink);letter-spacing:.24em}
 .paleta{display:flex;justify-content:center;gap:.8rem;margin:2rem 0 .6rem;flex-wrap:wrap}
 .paleta i{width:32px;height:32px;border-radius:50%;border:1px solid rgba(0,0,0,.06)}
-.paleta-nota{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--stone)}
+.paleta-nota{font-size:.7rem;letter-spacing:.22em;text-indent:.22em;text-transform:uppercase;color:var(--stone)}
 
 /* ---------- GALERÍA ---------- */
 .galeria{
@@ -691,7 +699,7 @@ body.locked{overflow:hidden}
 
 
 /* ---------- RSVP: FORMULARIO DE CONFIRMACIÓN ---------- */
-.rsvp-estado{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sage-lt);margin-top:2rem}
+.rsvp-estado{font-size:.72rem;letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;color:var(--sage-lt);margin-top:2rem}
 .rsvp-lugares{
   font-family:var(--display);font-size:1.2rem;line-height:1.6;color:var(--paper);
   margin:2.8rem auto 0;max-width:460px;
@@ -702,7 +710,7 @@ body.locked{overflow:hidden}
   max-width:380px;margin:1.1rem auto 0;
 }
 .campo-lbl{
-  display:block;font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;
+  display:block;font-size:.66rem;letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;
   color:var(--sage-lt);margin:3.4rem 0 1.4rem;
 }
 .rsvp-form{max-width:440px;margin:0 auto;text-align:center}
@@ -791,7 +799,7 @@ body.locked{overflow:hidden}
   margin-top:1.4rem;padding-top:1.2rem;
   border-top:1px solid var(--hairline);
 }
-.inv-mesa .lbl{font-size:.6rem;letter-spacing:.34em;text-transform:uppercase;color:var(--stone)}
+.inv-mesa .lbl{font-size:.6rem;letter-spacing:.34em;text-indent:.34em;text-transform:uppercase;color:var(--stone)}
 .inv-mesa .num{
   display:block;font-family:var(--display);font-size:2rem;
   color:var(--dusty);line-height:1.2;margin-top:.2rem;
@@ -800,7 +808,7 @@ body.locked{overflow:hidden}
 .inv-pase .qr-marco{margin-top:.8rem;padding:.8rem}
 .inv-pase #qrPase{width:132px;height:132px}
 .inv-pase #qrPase img,.inv-pase #qrPase canvas{width:132px !important;height:132px !important;display:block}
-.inv-pase .lbl{font-size:.6rem;letter-spacing:.34em;text-transform:uppercase;color:var(--stone)}
+.inv-pase .lbl{font-size:.6rem;letter-spacing:.34em;text-indent:.34em;text-transform:uppercase;color:var(--stone)}
 
 /* ---------- EL NOMBRE SE ESCRIBE SOLO ---------- */
 .env-para .para-nombre{
@@ -824,7 +832,7 @@ body.locked{overflow:hidden}
   letter-spacing:.04em;line-height:1.2;
 }
 .hoy-hora{font-family:var(--display);font-size:2.2rem;color:var(--dusty);margin:.8rem 0 .2rem}
-.hoy-sub{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--stone)}
+.hoy-sub{font-size:.72rem;letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;color:var(--stone)}
 .hoy-acciones{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:2rem}
 .hoy-acciones .btn{margin-top:0}
 
@@ -835,7 +843,7 @@ body.locked{overflow:hidden}
 /* ---------- FOOTER ---------- */
 footer{
   text-align:center;padding:3.5rem 1.6rem;
-  font-size:.68rem;letter-spacing:.34em;text-transform:uppercase;color:var(--stone);
+  font-size:.68rem;letter-spacing:.34em;text-indent:.34em;text-transform:uppercase;color:var(--stone);
 }
 footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;color:var(--ink);margin-bottom:.8rem}
 
@@ -890,9 +898,9 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   <img class="hero-logo reveal" src="logo.png" alt="" onerror="this.remove()">
   <p class="eyebrow reveal">Nos casamos</p>
   <h1 class="reveal">
-    Steve
+    <span class="nombre">Steve</span>
     <span class="amp">&amp;</span>
-    Pamela
+    <span class="nombre">Pamela</span>
   </h1>
   <p class="fecha reveal">Sábado · 12 · Diciembre · 2026</p>
   <p class="lugar reveal">San José el Viejo · La Antigua Guatemala</p>
@@ -954,7 +962,7 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   <p style="max-width:470px;margin:1.4rem auto 0;color:var(--stone)">
     Este no será solo un día para celebrar nuestro amor, sino también para reunir
     a las personas que han sido parte de nuestra historia. La fecha está marcada
-    y La Antigua espera convertirse en escenario de encuentros, abrazos y memorias
+    y La Antigua Guatemala espera convertirse en escenario de encuentros, abrazos y memorias
     que llevaremos todos en el corazón.
   </p>
   <p style="max-width:430px;margin:2rem auto 0;font-family:var(--display);
