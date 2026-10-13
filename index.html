@@ -829,6 +829,10 @@ body.locked{overflow:hidden}
 
 /* ---------- HOTELES ---------- */
 .hoteles-intro{font-size:.92rem;color:var(--stone);max-width:460px;margin:0 auto 2rem}
+.parqueo-nota{
+  font-family:var(--display);font-style:italic;font-size:.9rem;line-height:1.7;
+  color:var(--dusty);max-width:420px;margin:1.8rem auto 0;text-wrap:balance;
+}
 .hotel{
   padding:1.5rem 0;border-bottom:1px solid var(--hairline);text-align:left;
   display:flex;justify-content:space-between;gap:1.2rem;align-items:center;flex-wrap:wrap;
@@ -864,6 +868,16 @@ body.locked{overflow:hidden}
   margin:2.8rem auto 0;max-width:460px;
 }
 .rsvp-lugares b{font-style:italic;color:var(--sage-lt);font-weight:400}
+.rsvp-ninos{
+  font-family:var(--display);font-style:italic;
+  font-size:.94rem;line-height:1.75;color:var(--sage-lt);
+  max-width:400px;margin:1.4rem auto 0;
+  text-wrap:balance;
+}
+.rsvp-ninos::before{
+  content:"";display:block;width:40px;height:1px;margin:0 auto 1.2rem;
+  background:rgba(192,207,178,.5);
+}
 .rsvp-nota{
   font-size:.76rem;color:#93A0AF;letter-spacing:.04em;line-height:1.7;
   max-width:380px;margin:1.1rem auto 0;
@@ -908,7 +922,7 @@ body.locked{overflow:hidden}
 .rsvp-form input[type="text"]:focus,.rsvp-form textarea:focus{
   outline:none;border-color:var(--sage-lt);background:rgba(248,249,246,.1);
 }
-.rsvp-form input::placeholder,.rsvp-form textarea::placeholder{color:#7C8896}
+.rsvp-form input::placeholder,.rsvp-form textarea::placeholder{color:#9AA6B4}
 .rsvp-form textarea{resize:vertical;min-height:96px;line-height:1.6}
 /* botón enviar */
 .btn-enviar{
@@ -1114,7 +1128,7 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
     <div class="amp">&amp;</div>
     <div class="lado">
       <p class="rol">Padres de la novia</p>
-      <p class="nombre">Pablo Herrera<br>Claudia Monzón</p>
+      <p class="nombre">Pablo Herrera<br>Claudia Monzón de Herrera</p>
     </div>
   </div>
 
@@ -1218,7 +1232,7 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
   <h2 class="reveal">Dónde parquear</h2>
   <p class="hoteles-intro reveal">
     San José el Viejo está sobre la 5a Avenida Sur. Como el parqueo en calle
-    es limitado, te dejamos la opción más cercana y cómoda.
+    es limitado, te sugerimos la opción más cercana y cómoda.
   </p>
 
   <div class="reveal">
@@ -1232,6 +1246,10 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
         <a href="https://maps.google.com/?q=Parqueo+La+Estacion+de+Antigua" target="_blank" rel="noopener">Cómo llegar</a>
       </div>
     </div>
+    <p class="parqueo-nota">
+      Los espacios están sujetos a la disponibilidad que tenga el parqueo
+      ese día, por lo que te sugerimos llegar con tiempo.
+    </p>
   </div>
   <div class="thread" style="margin-top:4rem"></div>
 </section>
@@ -1481,6 +1499,12 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
       <p class="rsvp-nota">
         Con todo nuestro cariño, los lugares son personales y no pueden transferirse.
       </p>
+      <!-- Nota "solo adultos" (la ven todos los invitados) -->
+      <p class="rsvp-ninos" id="rsvpNinos">
+        Queremos mucho a los más pequeños de la familia, pero esta vez la
+        celebración será solo para adultos, para que los papis puedan relajarse
+        y disfrutar la fiesta al máximo. ¡Gracias por comprendernos!
+      </p>
 
       <p class="campo-lbl">¿Nos acompañas?</p>
       <div class="sino">
@@ -1497,7 +1521,7 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
       <div id="bloqueComentarios">
         <label class="campo-lbl" for="rsvpComentarios">Un mensaje para nosotros (opcional)</label>
         <textarea id="rsvpComentarios" maxlength="300"
-                  placeholder="Alergias, restricciones de comida o unas palabras para los novios…"></textarea>
+                  placeholder="Alergias, restricciones o solo unas palabras para nosotros…"></textarea>
       </div>
 
       <button type="button" class="btn-enviar" id="btnEnviar" disabled>Enviar confirmación</button>
