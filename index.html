@@ -29,9 +29,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Karla:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-<!-- Caligrafía para los nombres. Para cambiar el estilo, edita la variable
-     --script en el CSS: 'Great Vibes', 'Pinyon Script' o 'Parisienne'. -->
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pinyon+Script&family=Parisienne&display=swap" rel="stylesheet">
+<!-- Caligrafía de la solapa del sobre (los nombres grandes son la imagen nombres.png) -->
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+<!-- la imagen de los nombres se pide desde el inicio para que esté lista al abrir -->
+<link rel="preload" as="image" href="nombres.png">
 
 <style>
 :root{
@@ -48,7 +49,13 @@
   --hairline: #DDE3DA;
   --display: 'Marcellus', serif;
   --body:    'Karla', sans-serif;
-  --script:  'Great Vibes', cursive;   /* alternativas: 'Pinyon Script', 'Parisienne' */
+  --script:  'Great Vibes', cursive;
+
+  /* fondos de las bandas de sección (todos salen de la paleta) */
+  --salvia:  #E7ECE2;   /* light sage muy diluido */
+  --bruma:   #E7EBF0;   /* periwinkle / sea glass muy diluido */
+  --ancho:   630px;     /* ancho máximo del contenido */
+  --grano:   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)' opacity='.05'/%3E%3C/svg%3E");
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{
@@ -60,7 +67,7 @@ html{
 body{
   /* grano de papel muy sutil: da sensación de cartulina, pesa unos pocos bytes */
   background-color:var(--paper);
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)' opacity='.05'/%3E%3C/svg%3E");
+  background-image:var(--grano);
   color:var(--ink);
   font-family:var(--body);
   font-weight:300;
@@ -78,21 +85,74 @@ body{
   margin-bottom:1.4rem;
 }
 h1,h2,h3{font-family:var(--display);font-weight:400}
+h2,.eyebrow,.hero .fecha,.hero .lugar,.padres-intro,.bebes-nota,.clima-etiqueta,.paleta-nota,
+.invitado-pases,.rsvp-lugares,.rsvp-nota,.hoy-sub,.campo-lbl{text-wrap:balance}
 h2{font-size:clamp(1.9rem,4vw,2.7rem);letter-spacing:.04em;margin-bottom:1.2rem}
 
-/* ---------- línea vertical continua (elemento firma) ---------- */
-.thread{
-  width:1px;height:90px;margin:0 auto;
-  background:linear-gradient(var(--sage) 0%,var(--hairline) 100%);
-}
+/* ---------- línea vertical: ya no se usa, ahora las secciones se separan
+   con bandas de color y un arco en la parte de arriba ---------- */
+.thread{display:none}
 
-/* ---------- secciones ---------- */
+/* ---------- secciones: bandas de color a todo el ancho ----------
+   Ritmo: papel → salvia → papel → bruma … y azul marino en los tres
+   momentos clave (cuenta regresiva, galería y confirmación). */
 section{
-  max-width:680px;
-  margin:0 auto;
-  padding:5.5rem 1.6rem;
+  --fondo:var(--paper);
+  position:relative;
+  max-width:none;
+  margin:0;
+  padding:6.4rem max(1.6rem, calc((100% - var(--ancho)) / 2)) 5.8rem;
   text-align:center;
 }
+section.banda-salvia{--fondo:var(--salvia);background:var(--grano),var(--salvia)}
+section.banda-bruma {--fondo:var(--bruma); background:var(--grano),var(--bruma)}
+section.banda-navy  {--fondo:var(--ink);   background:var(--ink);color:var(--paper)}
+
+/* arco con ícono al inicio de cada sección: como una puertita colonial de
+   La Antigua que asoma sobre la sección anterior y dice qué viene */
+.arco{
+  position:absolute;left:50%;top:0;z-index:3;
+  width:60px;height:72px;
+  transform:translate(-50%,-50%);
+  border-radius:30px 30px 3px 3px;
+  background:var(--fondo);
+  border:1px solid var(--hairline);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--sage-dk);
+}
+.arco::before{
+  content:"";position:absolute;inset:4px;
+  border:1px solid var(--seaglass);
+  border-radius:26px 26px 1px 1px;
+  pointer-events:none;
+}
+.arco svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.3;
+          stroke-linecap:round;stroke-linejoin:round;margin-top:4px}
+.banda-navy .arco{border-color:var(--ink);color:var(--sage-lt)}
+.banda-navy .arco::before{border-color:rgba(192,207,178,.38)}
+
+/* remate debajo de cada título: línea · punto · línea */
+section h2:not(.hoy-titulo)::after{
+  content:"";display:block;width:84px;height:7px;margin:1.1rem auto 0;
+  background:
+    radial-gradient(circle,var(--sage) 0 2.2px,transparent 2.7px) center/7px 7px no-repeat,
+    linear-gradient(var(--sage),var(--sage)) left center/34px 1px no-repeat,
+    linear-gradient(var(--sage),var(--sage)) right center/34px 1px no-repeat;
+}
+.banda-navy h2:not(.hoy-titulo)::after{
+  background:
+    radial-gradient(circle,var(--sage-lt) 0 2.2px,transparent 2.7px) center/7px 7px no-repeat,
+    linear-gradient(var(--sage-lt),var(--sage-lt)) left center/34px 1px no-repeat,
+    linear-gradient(var(--sage-lt),var(--sage-lt)) right center/34px 1px no-repeat;
+}
+
+/* textos sobre azul marino */
+.banda-navy .eyebrow{color:var(--sage-lt)}
+.banda-navy h2{color:var(--paper)}
+/* (las tarjetas blancas del día de la boda mantienen sus colores) */
+.banda-navy .hoy-card{color:var(--ink)}
+.banda-navy .hoy-card .eyebrow{color:var(--sage-dk)}
+.banda-navy .hoy-card h2{color:var(--ink)}
 .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
 .reveal.in{opacity:1;transform:none}
 @media (prefers-reduced-motion: reduce){
@@ -361,6 +421,7 @@ body.locked{overflow:hidden}
   color:var(--sage-dk);line-height:2;max-width:430px;margin:0 auto 2.6rem;
 }
 .padres{display:flex;justify-content:center;align-items:center;gap:2.2rem;flex-wrap:wrap}
+@media (max-width:560px){ .padres-intro br{display:none} }
 .padres .lado{flex:1 1 220px}
 .padres .rol{
   font-size:.6rem;letter-spacing:.32em;text-indent:.32em;text-transform:uppercase;
@@ -414,21 +475,27 @@ body.locked{overflow:hidden}
   font-size:.68rem;letter-spacing:.42em;text-indent:.42em;text-transform:uppercase;
   color:var(--stone);margin:3.2rem 0 .4rem;
 }
-.novios{
-  font-family:var(--script);
-  color:var(--ink);
-  line-height:1.05;
+/* lettering caligráfico (imagen nombres.png, fondo transparente).
+   En el celular se sale un poco del margen para verse más grande. */
+.novios{margin:1.4rem -1rem 0}
+.nombres-arte{display:block;width:100%;max-width:640px;height:auto;margin:0 auto}
+/* efecto "se escribe solo": la tinta aparece de izquierda a derecha */
+@property --pluma{ syntax:"<percentage>"; inherits:false; initial-value:-16%; }
+.nombres-arte.reveal{
+  opacity:1;transform:none;transition:none;
+  -webkit-mask-image:linear-gradient(100deg,#000 var(--pluma),transparent calc(var(--pluma) + 14%));
+          mask-image:linear-gradient(100deg,#000 var(--pluma),transparent calc(var(--pluma) + 14%));
 }
-.novios .n{
-  display:block;
-  font-size:clamp(3.2rem,15vw,5.2rem);
+.nombres-arte.reveal.in{animation:pluma 3.2s cubic-bezier(.45,.05,.35,1) .3s forwards}
+@keyframes pluma{ to{--pluma:100%} }
+@media (prefers-reduced-motion: reduce){
+  .nombres-arte.reveal{-webkit-mask-image:none;mask-image:none}
+  .nombres-arte.reveal.in{animation:none}
 }
-.novios .y{
-  display:block;
-  font-size:clamp(1.9rem,8vw,2.8rem);
-  color:var(--sage);
-  margin:.1rem 0;
-}
+/* respaldo en texto, solo si nombres.png todavía no está subido */
+.novios-texto{font-family:var(--script);color:var(--ink);line-height:1.05}
+.novios-texto .n{display:block;font-size:clamp(3.2rem,15vw,5.2rem)}
+.novios-texto .y{display:block;font-size:clamp(1.9rem,8vw,2.8rem);color:var(--sage);margin:.1rem 0}
 .novios-cierre{
   font-size:.95rem;color:var(--stone);
   max-width:400px;margin:1.8rem auto 0;line-height:1.8;
@@ -470,29 +537,47 @@ body.locked{overflow:hidden}
 .hero .monogram img{width:min(78vmin,560px);opacity:.045}
 .hero-logo{width:92px;margin-bottom:1.8rem;opacity:.92}
 .hero .eyebrow{margin-bottom:2.2rem}
+/* portada: nombres en Marcellus mayúsculas (el lettering caligráfico
+   vive más abajo, en "Nosotros", para que no se repitan) */
 .hero h1{
-  font-family:var(--script);
-  font-weight:400;
-  font-size:clamp(3.6rem,17vw,6.2rem);
-  letter-spacing:.02em;
-  text-transform:none;
-  line-height:1;
-  padding:0 .5rem;          /* aire para los remates de la caligrafía */
+  position:relative;z-index:1;
+  font-size:clamp(2.6rem,8vw,4.6rem);
+  letter-spacing:.12em;text-indent:.12em;
+  text-transform:uppercase;
+  line-height:1.15;
 }
-.hero h1 .nombre{display:block;margin:.1rem 0}
+.hero h1 .nombre{display:block}
 .hero .amp{
   display:block;
-  font-size:clamp(1.9rem,8vw,3rem);
+  font-size:clamp(1.6rem,4vw,2.4rem);
   color:var(--sage);
-  font-family:var(--script);
-  font-style:normal;
-  margin:.35rem 0;
-  text-transform:none;letter-spacing:0;
+  font-family:var(--display);
+  font-style:italic;
+  margin:.4rem 0;
+  text-transform:none;letter-spacing:0;text-indent:0;
+}
+.hero > *:not(.monogram):not(.flor-marco):not(.scroll-hint){position:relative;z-index:1}
+.hero .scroll-hint{z-index:1}
+/* ramos en las esquinas de la portada: la misma imagen del sobre (ya está
+   descargada, no pesa nada extra) */
+.flor-marco{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.flor-marco img{position:absolute;width:min(46vw,300px);height:auto}
+.hero .flor-marco img{opacity:0;transition:opacity 1.8s ease .6s}
+.hero.abierta .flor-marco img{opacity:.96}
+.hero .flor-arriba{top:-4%;left:-6%;transform:scale(-1,-1)}
+.hero .flor-abajo{bottom:-5%;right:-5%}
+@media (max-height:720px){ .flor-marco img{width:min(36vw,240px)} }
+@media (min-width:900px){
+  .hero .flor-arriba{top:-6%;left:-3%}
+  .hero .flor-abajo{bottom:-6%;right:-2%}
 }
 .hero .fecha{
   margin-top:2.4rem;
   font-size:.86rem;letter-spacing:.34em;text-indent:.34em;text-transform:uppercase;color:var(--stone);
 }
+.nw{white-space:nowrap}
+/* en el celular, fecha y lugar van en dos renglones limpios (sin el punto) */
+@media (max-width:560px){ .hero .sep{display:none} .hero .nw{display:block} }
 .hero .lugar{font-size:.8rem;letter-spacing:.24em;text-indent:.24em;text-transform:uppercase;color:var(--stone);margin-top:.5rem}
 .scroll-hint{
   position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);
@@ -522,6 +607,15 @@ body.locked{overflow:hidden}
 .countdown span{
   display:block;margin-top:.6rem;
   font-size:.62rem;letter-spacing:.32em;text-indent:.32em;text-transform:uppercase;color:var(--stone);
+}
+/* cuenta regresiva sobre azul marino */
+.banda-navy .countdown{border-color:rgba(248,249,246,.16)}
+.banda-navy .countdown div{border-right-color:rgba(248,249,246,.16)}
+.banda-navy .countdown b{color:var(--paper)}
+.banda-navy .countdown span{color:#AEB8C4}
+.cd-frase{
+  font-family:var(--display);font-style:italic;font-size:1.05rem;letter-spacing:.06em;
+  color:var(--sage-lt);margin-top:2rem;
 }
 
 /* ---------- ITINERARIO ---------- */
@@ -670,6 +764,16 @@ body.locked{overflow:hidden}
 .galeria .foto img{position:absolute;inset:0;z-index:1}
 .galeria .foto:nth-child(1){grid-column:span 2;aspect-ratio:16/9}
 .galeria img{width:100%;height:100%;object-fit:cover;display:block}
+/* galería sobre azul marino: las fotos resaltan como en una sala de exhibición */
+.banda-navy .carrete-titulo{color:var(--paper)}
+.banda-navy .bebes-nota{color:#AEB8C4}
+.banda-navy .bebes-amp{color:var(--sage-lt)}
+.banda-navy .polaroid{border-color:transparent;box-shadow:0 16px 34px rgba(8,14,24,.45)}
+.banda-navy .cover-item{box-shadow:0 8px 16px rgba(8,14,24,.32)}
+.banda-navy .cover-item.activa{box-shadow:0 10px 18px rgba(8,14,24,.42)}
+.banda-navy .cover-puntos span{background:rgba(248,249,246,.25)}
+.banda-navy .cover-puntos span.on{background:var(--sage-lt)}
+.banda-navy .galeria .foto{background:#3A4E66;color:#AEB8C4}
 
 /* ---------- HOTELES ---------- */
 .hoteles-intro{font-size:.92rem;color:var(--stone);max-width:460px;margin:0 auto 2rem}
@@ -690,10 +794,13 @@ body.locked{overflow:hidden}
 
 /* ---------- RSVP ---------- */
 .rsvp{background:var(--ink);color:var(--paper);max-width:none}
-.rsvp .inner{max-width:680px;margin:0 auto}
+.rsvp .inner{max-width:680px;margin:0 auto;position:relative;z-index:1}
+/* ramito asomando en la esquina superior derecha */
+.rsvp .flor-marco img{top:-1.2rem;right:-8%;width:min(42vw,260px);transform:scaleY(-1);opacity:.92}
+@media (min-width:900px){ .rsvp .flor-marco img{top:-2rem;right:2%} }
 .rsvp .eyebrow{color:var(--sage-lt)}
 .rsvp h2{color:var(--paper)}
-.rsvp p{color:#AEB8C4;font-size:.95rem;max-width:460px;margin:0 auto}
+.rsvp :where(p){color:#AEB8C4;font-size:.95rem;max-width:460px;margin:0 auto}
 .rsvp .btn{border-color:var(--paper);color:var(--paper);margin-top:2.2rem}
 .rsvp .btn:hover,.rsvp .btn:focus-visible{background:var(--paper);color:var(--ink)}
 
@@ -895,6 +1002,10 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 <!-- ==================== HERO ==================== -->
 <header class="hero">
   <div class="monogram" aria-hidden="true"><img src="logo.png" alt=""></div>
+  <div class="flor-marco" aria-hidden="true">
+    <img class="flor-arriba" src="botonier2_esquina.png?v=3" alt="" onerror="this.remove()">
+    <img class="flor-abajo"  src="botonier2_esquina.png?v=3" alt="" onerror="this.remove()">
+  </div>
   <img class="hero-logo reveal" src="logo.png" alt="" onerror="this.remove()">
   <p class="eyebrow reveal">Nos casamos</p>
   <h1 class="reveal">
@@ -902,13 +1013,14 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
     <span class="amp">&amp;</span>
     <span class="nombre">Pamela</span>
   </h1>
-  <p class="fecha reveal">Sábado · 12 · Diciembre · 2026</p>
-  <p class="lugar reveal">San José el Viejo · La Antigua Guatemala</p>
+  <p class="fecha reveal">Sábado<span class="sep"> · </span><span class="nw">12 · Diciembre · 2026</span></p>
+  <p class="lugar reveal">San José el Viejo<span class="sep"> · </span><span class="nw">La Antigua Guatemala</span></p>
   <div class="scroll-hint">Desliza</div>
 </header>
 
 <!-- ==================== COUNTDOWN ==================== -->
-<section>
+<section class="banda-navy" id="cuenta">
+  <div class="arco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12M6 21h12"/><path d="M7 3c0 5 4 6.5 5 9-1 2.5-5 4-5 9M17 3c0 5-4 6.5-5 9 1 2.5 5 4 5 9"/><path d="M9.6 18.6h4.8"/></svg></div>
   <p class="eyebrow reveal">Faltan</p>
   <div class="countdown reveal" id="countdown" aria-live="polite">
     <div><b id="cd-d">–</b><span>Días</span></div>
@@ -916,13 +1028,15 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
     <div><b id="cd-m">–</b><span>Min</span></div>
     <div><b id="cd-s">–</b><span>Seg</span></div>
   </div>
-  <div class="thread" style="margin-top:4rem"></div>
+  <p class="cd-frase reveal">para decir &laquo;sí, acepto&raquo;</p>
 </section>
 
 <!-- ==================== PADRES ==================== -->
-<section class="reveal">
+<section id="nosotros">
+  <div class="arco" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="14.5" r="5.3"/><circle cx="15" cy="14.5" r="5.3"/><path d="M15 3.2l1.7 1.9L15 7.2l-1.7-2.1z"/></svg></div>
+  <div class="reveal">
   <p class="padres-intro">
-    Con nuestro amor, la bendición de Dios<br>y la de nuestros padres
+    Con nuestro amor, la bendición de Dios <br>y la de nuestros padres
   </p>
 
   <div class="padres">
@@ -939,19 +1053,26 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 
   <p class="nosotros">Nosotros</p>
   <div class="novios">
-    <span class="n">Steve</span>
-    <span class="y">&amp;</span>
-    <span class="n">Pamela</span>
+    <!-- Sube nombres.png a la raíz del repositorio (junto a index.html) -->
+    <img class="nombres-arte reveal" src="nombres.png" alt="Steve &amp; Pamela"
+         width="1980" height="964" decoding="async"
+         onerror="this.remove();document.getElementById('noviosTexto').hidden=false">
+    <div class="novios-texto" id="noviosTexto" hidden>
+      <span class="n">Steve</span>
+      <span class="y">&amp;</span>
+      <span class="n">Pamela</span>
+    </div>
   </div>
   <p class="novios-cierre">
     Tenemos el honor de invitarte a celebrar<br>nuestra unión en matrimonio
   </p>
-
-  <div class="thread" style="margin-top:4rem"></div>
+  </div>
 </section>
 
 <!-- ==================== MENSAJE ==================== -->
-<section class="reveal">
+<section class="banda-salvia" id="mensaje">
+  <div class="arco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6.5C10 5 6.5 4.5 3 5v13c3.5-.5 7 0 9 1.5 2-1.5 5.5-2 9-1.5V5c-3.5-.5-7 0-9 1.5z"/><path d="M12 6.5v13"/></svg></div>
+  <div class="reveal">
   <p class="eyebrow">12 · 12 · 2026</p>
   <h2>Cada historia merece ser contada</h2>
   <p style="max-width:470px;margin:0 auto;color:var(--stone)">
@@ -969,12 +1090,12 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
             font-style:italic;font-size:1.1rem;color:var(--ink)">
     Más que anunciar, queremos agradecer y celebrar la esencia de estar juntos.
   </p>
-  <div class="thread" style="margin-top:4rem"></div>
+  </div>
 </section>
 
 <!-- ==================== INVITADO (personalizada por link) ==================== -->
-<section id="invitado" class="reveal" style="display:none;padding-top:0">
-  <div class="invitado-card">
+<section id="invitado" class="banda-salvia" style="display:none;padding-top:0">
+  <div class="invitado-card reveal">
     <p class="eyebrow" style="margin-bottom:.9rem">Invitación especial para</p>
     <div class="invitado-nombre" id="invNombre"></div>
     <div class="env-div" style="margin:.9rem auto"></div>
@@ -993,7 +1114,8 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 </section>
 
 <!-- ==================== ITINERARIO + MAPA ==================== -->
-<section>
+<section id="itinerario">
+  <div class="arco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4.5 21V10.5L12 5.5l7.5 5V21"/><path d="M12 5.5V2M10.4 3.4h3.2"/><path d="M9.6 21v-4.3a2.4 2.4 0 0 1 4.8 0V21"/><path d="M2.5 21h19"/><circle cx="12" cy="11" r="1.4"/></svg></div>
   <p class="eyebrow reveal">Itinerario</p>
   <h2 class="reveal">El gran día</h2>
 
@@ -1023,7 +1145,8 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 </section>
 
 <!-- ==================== CÓMO LLEGAR ==================== -->
-<section id="llegar">
+<section id="llegar" class="banda-bruma">
+  <div class="arco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21.5s-6.5-6.2-6.5-11.5a6.5 6.5 0 0 1 13 0c0 5.3-6.5 11.5-6.5 11.5z"/><circle cx="12" cy="10" r="2.4"/></svg></div>
   <p class="eyebrow reveal">Cómo llegar</p>
   <h2 class="reveal">Dónde parquear</h2>
   <p class="hoteles-intro reveal">
@@ -1048,6 +1171,7 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 
 <!-- ==================== CLIMA ==================== -->
 <section id="clima">
+  <div class="arco" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9.5" cy="9" r="3.4"/><path d="M9.5 2.4v1.5M2.9 9h1.5M4.8 4.3l1.1 1.1M14.2 4.3l-1.1 1.1"/><path d="M8.5 19.5h9a3 3 0 0 0 .2-6 4.2 4.2 0 0 0-7.9 1.2 2.4 2.4 0 0 0-1.3 4.8z"/></svg></div>
   <p class="eyebrow reveal">Para que vengas preparado</p>
   <h2 class="reveal">El clima ese día</h2>
 
@@ -1076,7 +1200,8 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 </section>
 
 <!-- ==================== DRESS CODE ==================== -->
-<section>
+<section class="banda-salvia" id="vestimenta">
+  <div class="arco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 5.6a2 2 0 1 1 2 2v1.3"/><path d="M12 8.9 3.1 15.4c-.8.6-.4 1.8.6 1.8h16.6c1 0 1.4-1.2.6-1.8z"/></svg></div>
   <p class="eyebrow reveal">Código de vestimenta</p>
   <h2 class="reveal">Formal · Etiqueta</h2>
 
@@ -1166,7 +1291,8 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 </section>
 
 <!-- ==================== GALERÍA ==================== -->
-<section>
+<section class="banda-navy" id="galeria">
+  <div class="arco" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="1"/><path d="M3.5 16.5l4.6-4.6 3.4 3.4 2.9-2.9 6.1 6.1"/><circle cx="15.6" cy="9" r="1.6"/></svg></div>
   <p class="eyebrow reveal">Nuestra historia</p>
   <h2 class="reveal">Momentos</h2>
 
@@ -1205,7 +1331,8 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 </section>
 
 <!-- ==================== HOTELES ==================== -->
-<section>
+<section id="hospedaje">
+  <div class="arco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 19V6M3 14h18v5M21 14v-2.4a3 3 0 0 0-3-3h-7.2V14"/><circle cx="6.9" cy="11.1" r="1.8"/></svg></div>
   <p class="eyebrow reveal">Para nuestros invitados de fuera</p>
   <h2 class="reveal">Hoteles sugeridos</h2>
   <p class="hoteles-intro reveal">
@@ -1217,7 +1344,9 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 </section>
 
 <!-- ==================== MESA DE REGALOS ==================== -->
-<section class="reveal">
+<section class="banda-bruma" id="regalos">
+  <div class="arco" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="8.8" width="17" height="4.2" rx=".5"/><path d="M5 13v8h14v-8M12 8.8V21"/><path d="M12 8.8C10.6 5.3 6.6 4.4 6.6 6.8c0 1.6 2.5 2 5.4 2zM12 8.8c1.4-3.5 5.4-4.4 5.4-2 0 1.6-2.5 2-5.4 2z"/></svg></div>
+  <div class="reveal">
   <p class="eyebrow">Mesa de regalos</p>
   <h2>Tu presencia es nuestro mejor regalo</h2>
   <p style="color:var(--stone);max-width:440px;margin:0 auto">
@@ -1240,10 +1369,13 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
     <div class="separador"></div>
     <button type="button" class="btn-copiar" id="btnCopiarCuenta">Copiar número</button>
   </div>
+  </div>
 </section>
 
 <!-- ==================== ÁLBUM DE FOTOS (QR) ==================== -->
-<section id="album" class="reveal" style="display:none">
+<section id="album" style="display:none">
+  <div class="arco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 8.6A1.6 1.6 0 0 1 4.6 7h2.9l1.6-2.5h5.8L16.5 7h2.9A1.6 1.6 0 0 1 21 8.6v9.8a1.6 1.6 0 0 1-1.6 1.6H4.6A1.6 1.6 0 0 1 3 18.4z"/><circle cx="12" cy="13.2" r="3.7"/></svg></div>
+  <div class="reveal">
   <p class="eyebrow">Durante la celebración</p>
   <h2>Comparte tus fotos</h2>
   <p style="color:var(--stone);max-width:440px;margin:0 auto">
@@ -1251,10 +1383,15 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
     a nuestro álbum compartido. Después del gran día podremos revivirlo juntos.
   </p>
   <div class="qr-marco"><div id="qr"></div></div>
+  </div>
 </section>
 
 <!-- ==================== RSVP ==================== -->
-<section class="rsvp" id="rsvp">
+<section class="rsvp banda-navy" id="rsvp">
+  <div class="arco" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="1"/><path d="M3.6 6.4 12 12.8l8.4-6.4"/></svg></div>
+  <div class="flor-marco" aria-hidden="true">
+    <img src="botonier2_esquina.png?v=3" alt="" loading="lazy" onerror="this.remove()">
+  </div>
   <div class="inner reveal">
     <p class="eyebrow">Confirmación</p>
     <h2>¿Contamos contigo?</h2>
@@ -1511,6 +1648,10 @@ if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
   const countdown = document.getElementById("countdown");
   const seccionCountdown = countdown ? countdown.closest("section") : null;
 
+  // el arco con ícono de la sección se conserva al cambiar su contenido
+  const arcoCuenta = seccionCountdown ? seccionCountdown.querySelector(".arco") : null;
+  const ponerArco = () => { if(arcoCuenta) seccionCountdown.prepend(arcoCuenta); };
+
   // --- EL DÍA DE LA BODA ---
   if(mismoDia){
     if(seccionCountdown){
@@ -1526,6 +1667,7 @@ if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
           '</div>' +
         '</div>' +
         '<div class="thread" style="margin-top:4rem"></div>';
+      ponerArco();
     }
     // el álbum sube: es lo que van a usar durante la fiesta
     if(album && seccionCountdown && album.parentNode)
@@ -1545,6 +1687,7 @@ if(CONFIG.albumUrl && typeof QRCode !== "undefined"){
         '</p>' +
       '</div>' +
       '<div class="thread" style="margin-top:4rem"></div>';
+    ponerArco();
   }
   if(album && seccionCountdown && album.parentNode)
     seccionCountdown.parentNode.insertBefore(album, seccionCountdown.nextSibling);
@@ -1765,6 +1908,7 @@ function abrirSobre(){
     el.style.transitionDelay = (1.1 + i*.18) + "s";
     requestAnimationFrame(()=>el.classList.add("in"));
   });
+  document.querySelector(".hero").classList.add("abierta");   // aparecen los ramos de la portada
   player.classList.remove("centro");               // y el reproductor viaja
   player.classList.add("esquina");                 // a la esquina inferior izquierda
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
