@@ -48,7 +48,12 @@
   --body:    'Karla', sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{
+  scroll-behavior:smooth;
+  /* base tipográfica: 6% más grande que la del navegador, para que todo
+     el texto en rem se lea mejor sobre todo en el celular */
+  font-size:106%;
+}
 body{
   /* grano de papel muy sutil: da sensación de cartulina, pesa unos pocos bytes */
   background-color:var(--paper);
@@ -62,6 +67,7 @@ body{
 
 /* ---------- utilidades tipográficas ---------- */
 .eyebrow{
+  overflow-wrap:break-word;
   font-size:.72rem;
   letter-spacing:.42em;
   text-transform:uppercase;
@@ -398,6 +404,32 @@ body.locked{overflow:hidden}
   transition:background .3s,color .3s;
 }
 .btn-copiar:hover{background:var(--ink);color:var(--paper)}
+
+
+/* ---------- NOMBRES DE LOS NOVIOS (después de los padres) ---------- */
+.nosotros{
+  font-size:.68rem;letter-spacing:.42em;text-transform:uppercase;
+  color:var(--stone);margin:3.2rem 0 .4rem;
+}
+.novios{
+  font-family:"Great Vibes", cursive;
+  color:var(--ink);
+  line-height:1.05;
+}
+.novios .n{
+  display:block;
+  font-size:clamp(3.2rem,15vw,5.2rem);
+}
+.novios .y{
+  display:block;
+  font-size:clamp(1.9rem,8vw,2.8rem);
+  color:var(--sage);
+  margin:.1rem 0;
+}
+.novios-cierre{
+  font-size:.95rem;color:var(--stone);
+  max-width:400px;margin:1.8rem auto 0;line-height:1.8;
+}
 
 /* ---------- INVITACIÓN PERSONALIZADA ---------- */
 .invitado-card{border:1px solid var(--hairline);background:#fff;padding:2.6rem 1.8rem;position:relative}
@@ -896,6 +928,17 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
       <p class="nombre">Pablo Herrera<br>Claudia Monzón</p>
     </div>
   </div>
+
+  <p class="nosotros">Nosotros</p>
+  <div class="novios">
+    <span class="n">Steve</span>
+    <span class="y">&amp;</span>
+    <span class="n">Pamela</span>
+  </div>
+  <p class="novios-cierre">
+    Tenemos el honor de invitarte a celebrar<br>nuestra unión en matrimonio
+  </p>
+
   <div class="thread" style="margin-top:4rem"></div>
 </section>
 
@@ -1184,8 +1227,7 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
       <dd>Steve Juárez / Pamela Herrera</dd>
 
       <dt>Número de cuenta</dt>
-      <!-- EDITAR: escribe aquí el número cuando lo tengas -->
-      <dd class="num" id="numCuenta">000-000000-0</dd>
+      <dd class="num" id="numCuenta">5010259</dd>
     </dl>
     <div class="separador"></div>
     <button type="button" class="btn-copiar" id="btnCopiarCuenta">Copiar número</button>
