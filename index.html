@@ -508,6 +508,23 @@ body.locked{overflow:hidden}
 .invitado-nombre{font-family:var(--display);font-size:clamp(1.6rem,5vw,2.2rem);letter-spacing:.06em}
 .invitado-pases{font-size:.76rem;letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;color:var(--sage-dk);margin-top:.3rem}
 
+/* ---------- INVITACIÓN RETIRADA ("Retirada" en la columna Estado de la hoja) ----------
+   Solo para ese invitado: se ven la portada, la tarjeta con el mensaje y el pie.
+   No cambia nada para los demás invitados. */
+body.retirada section:not(#invitado){display:none !important}
+body.retirada #invitado{display:block !important;padding-top:6.4rem !important}
+body.retirada #invMesa,body.retirada #invPase{display:none !important}
+.inv-retirada{
+  font-family:var(--display);font-style:italic;
+  font-size:1.05rem;line-height:1.8;color:var(--ink);
+  max-width:400px;margin:.4rem auto 0;text-wrap:balance;
+}
+.inv-firma{
+  display:block;margin-top:1.4rem;
+  font-family:var(--script);font-style:normal;font-size:2.3rem;line-height:1.2;
+  color:var(--sage-dk);
+}
+
 /* ---------- QR DEL ÁLBUM ---------- */
 .qr-marco{display:inline-block;background:#fff;border:1px solid var(--hairline);padding:1.1rem;margin-top:2.2rem;position:relative}
 .qr-marco::before{content:"";position:absolute;inset:7px;border:1px solid var(--seaglass);pointer-events:none}
@@ -1164,10 +1181,19 @@ footer .mono{font-family:var(--display);font-size:1.6rem;letter-spacing:.2em;col
 <!-- ==================== INVITADO (personalizada por link) ==================== -->
 <section id="invitado" class="banda-salvia" style="display:none;padding-top:0">
   <div class="invitado-card reveal">
-    <p class="eyebrow" style="margin-bottom:.9rem">Invitación especial para</p>
+    <p class="eyebrow" id="invEyebrow" style="margin-bottom:.9rem">Invitación especial para</p>
     <div class="invitado-nombre" id="invNombre"></div>
     <div class="env-div" style="margin:.9rem auto"></div>
     <p class="invitado-pases" id="invPases"></p>
+
+    <!-- Mensaje solo para invitaciones retiradas ("Retirada" en la hoja).
+         Si quieren cambiar las palabras, se cambian aquí. -->
+    <p class="inv-retirada" id="invRetirada" hidden>
+      Gracias de corazón por tu cariño. Por motivos de organización, esta vez
+      no nos será posible reservar un lugar a tu nombre, pero esperamos poder
+      celebrar contigo más adelante.
+      <span class="inv-firma">Steve &amp; Pamela</span>
+    </p>
 
     <!-- Mesa asignada (se muestra siempre) y pase de entrada (solo el día de la boda) -->
     <div class="inv-mesa" id="invMesa" hidden>
@@ -2092,6 +2118,20 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
     elGracias.hidden   = cual !== "gracias";
   }
 
+  // Invitación retirada ("Retirada" en la columna Estado de la hoja):
+  // se ve solo un mensaje de agradecimiento, sin pases, mesa ni formulario.
+  function mostrarRetirada(nombre){
+    datos = null;
+    document.body.classList.add("retirada");
+    const n = String(nombre || nombreLink || "").trim();
+    if(n){ pintarSobre(n); $("invNombre").textContent = n; }
+    $("invEyebrow").textContent = "Un mensaje especial para";
+    $("invPases").hidden = true;
+    $("invRetirada").hidden = false;
+    verPantalla("ninguna");
+    if(window.scrollY > 40) $("invitado").scrollIntoView({ block: "center" });
+  }
+
   /* --- selector de cantidad de personas --- */
   function pintarChips(){
     const cont = $("chips");
@@ -2198,6 +2238,7 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
     }
 
     buscarConReintentos(1).then(r => {
+      if(r && r.error === "retirada"){ mostrarRetirada(r.nombre); return; }
       if(!r || !r.ok){
         elCargando.textContent = "No pudimos reconocer tu invitación. Escríbenos y lo resolvemos.";
         return;
@@ -2253,6 +2294,7 @@ sobre.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preve
     });
 
     enviarIntento(1).then(r => {
+      if(r && r.error === "retirada"){ mostrarRetirada(); return; }
       if(r && r.ok){
         if(datos) datos.estado = r.asiste ? "Confirmado" : "No asiste";
         mostrarGracias(r.asiste, r.cantidad);
